@@ -67,27 +67,32 @@ for var in var_abbrs.keys():
 
 # Now back to semi-legitimate programming
 
-def listen(feed):
+def listen(full_feed):
     while True: # gross
-        if feed["raw_changed"]:
-            feed["raw_changed"] = False
-            #print(feed["value"])
-            parse(feed["raw"])
-            #os.system('clear') # clear screen
-            feed["styled"] = ""
-            for var in var_abbrs.keys():
-                feed["styled"] += var_abbrs[var]
-                feed["styled"] += ": "
-                feed["styled"] += str(var_vals[var])
-                feed["styled"] += default_units[var]
-                feed["styled"] += "\n"
-            feed["styled_changed"] = True
-            if feed["souls"] is not None:
-                #print("Attempting to update soul.")
-                feed["souls"]["WS1"](feed["styled"])
-            #else:
-                #print("No souls available.")
-            #print(feed["styled"])
+        if full_feed["feed1"]["updated"]:
+            handle(full_feed["feed1"])
+        if full_feed["feed2"]["updated"]:
+            handle(full_feed["feed2"])
+
+def handle(feed):
+    feed["updated"] = False
+    #print(feed["value"])
+    parse(feed["raw"])
+    #os.system('clear') # clear screen
+    feed["styled"] = ""
+    for var in var_abbrs.keys():
+        feed["styled"] += var_abbrs[var]
+        feed["styled"] += ": "
+        feed["styled"] += str(var_vals[var])
+        feed["styled"] += default_units[var]
+        feed["styled"] += "\n"
+    feed["styled_changed"] = True
+    if feed["soul"] is not None:
+        #print("Attempting to update soul.")
+        feed["soul"](feed["styled"])
+    #else:
+        #print("No souls available.")
+    #print(feed["styled"])
 
 def parse(line):
     # Every line starts with a group ID about which we don't care

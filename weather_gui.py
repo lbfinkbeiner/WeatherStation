@@ -8,11 +8,11 @@ from tkinter import ttk
  
 LARGEFONT =("Verdana", 35)
 
-souls = {"WS1": None, "WS2": None, "Deltas": None}
+feed = None
 
 class Weather_Interface(tk.Tk):
      
-    def __init__(self, feed, *args, **kwargs):
+    def __init__(self, *args, **kwargs):
         #tk.Tk().geometry("440x280")
         
         tk.Tk.__init__(self, *args, **kwargs)
@@ -34,8 +34,6 @@ class Weather_Interface(tk.Tk):
             frame.grid(row = 0, column = 0, sticky ="nsew")
   
         self.show_frame(WS1)
-        print("adding souls")
-        feed["souls"] = souls
   
     def show_frame(self, cont):
         frame = self.frames[cont]
@@ -63,24 +61,23 @@ class WS1(tk.Frame):
         command = lambda : controller.show_frame(Deltas))
         button_deltas.grid(row = 2, column = 1, padx = 10, pady = 10)
   
-        souls["WS1"] = update
+        feed["feed1"]["soul"] = update
     #def update_readings(self):
     #    self.WS1_details.text += out
   
 class WS2(tk.Frame):
      
     def __init__(self, parent, controller):
-        #def aTwoToTheOne():
-        #    controller.show_frame(Deltas)
-        #    label.config(text="556")
-        #    souls["WS1"]("998")
-        #def update(new_text):
-        #    WS1_details.config(text = new_text)
+        def update(new_text):
+            WS2_details.config(text = new_text)
         
         tk.Frame.__init__(self, parent)
         
         label = ttk.Label(self, text = "WS2", font = LARGEFONT)
         label.grid(row = 0, column = 4, padx = 10, pady = 10)
+  
+        WS2_details = ttk.Label(self, text = "<waiting for data>")
+        WS2_details.grid(row = 2, column = 2)
   
         button_WS1 = ttk.Button(self, text = "WS1",
             command = lambda : controller.show_frame(WS1))
@@ -90,6 +87,8 @@ class WS2(tk.Frame):
         button_deltas = ttk.Button(self, text = "Deltas",
             command = lambda : controller.show_frame(Deltas))
         button_deltas.grid(row = 2, column = 1, padx = 10, pady = 10)
+        
+        feed["feed2"]["soul"] = update
   
 # This frame will show the discrepancies between the readings of
 # the two weather stations.
@@ -108,8 +107,11 @@ class Deltas(tk.Frame):
             command = lambda : controller.show_frame(WS2))
         button_WS2.grid(row = 2, column = 1, padx = 10, pady = 10)
 
-def start(feed):  
-    app = Weather_Interface(feed)
+def start(input_feed):
+    global feed
+    feed = input_feed
+    
+    app = Weather_Interface()
     app.mainloop()
     """
     print("Refresh called")

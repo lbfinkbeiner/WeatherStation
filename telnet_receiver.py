@@ -24,7 +24,7 @@ def receive(feed, HOST, PORT):
                 if next_char.isspace():
                     feed["raw"] = latest
                     # publish the change
-                    feed["raw_changed"] = True
+                    feed["updated"] = True
                     latest = ""
                 else:
                     latest += next_char
