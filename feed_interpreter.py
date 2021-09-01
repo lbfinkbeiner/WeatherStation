@@ -1,16 +1,24 @@
 """
-    File name: telnet_interpret.py
+    File name: feed_interpreter.py
     Author: Lukas Finkbeiner
     Date created: 8/30/2021
-    Date last modified: 8/31/2021
+    Date last modified: 9/1/2021
     Python version: 3.7.3
 """
 
-import re, os
+import re, os, enum
 
-# Brace yourself for hard-code city
+class Role(enum.Enum):
+    ignore = 0
+    primary = 1
+    comms = 2
 
-# Do we care about heating at all?
+"""
+Brace yourself for hard-code city:
+the first two dictionaries come from
+the weather station manual and the
+last comes from Dr. Alexander Pollak.
+"""
 
 var_abbrs = {
     "Dn": "Wind direction minimum",
@@ -60,6 +68,31 @@ default_units = {
     "Vr": " V"
 }
 
+var_roles = {
+    "Dn": Role.ignore,
+    "Dm": Role.primary,
+    "Dx": Role.ignore,
+    "Sn": Role.ignore,
+    "Sm": Role.primary,
+    "Sx": Role.primary,
+    "Ta": Role.primary,
+    "Ua": Role.primary,
+    "Pa": Role.primary,
+    "Rc": Role.ignore,
+    "Rd": Role.ignore,
+    "Ri": Role.ignore,
+    "Hc": Role.ignore,
+    "Hd": Role.ignore,
+    "Hi": Role.ignore,
+    "Rp": Role.ignore,
+    "Hp": Role.ignore,
+    "Th": Role.ignore, # double check this one, could go in comms
+    "Vh": Role.comms,
+    "Vs": Role.comms,
+    "Vr": Role.ignore # double check this one, could go in comms
+}
+
+
 var_vals = {}
 
 for var in var_abbrs.keys():
@@ -76,23 +109,17 @@ def listen(full_feed):
 
 def handle(feed):
     feed["updated"] = False
-    #print(feed["value"])
     parse(feed["raw"])
-    #os.system('clear') # clear screen
-    feed["styled"] = ""
+    styled = ""
+    
     for var in var_abbrs.keys():
-        feed["styled"] += var_abbrs[var]
-        feed["styled"] += ": "
-        feed["styled"] += str(var_vals[var])
-        feed["styled"] += default_units[var]
-        feed["styled"] += "\n"
-    feed["styled_changed"] = True
+        styled += var_abbrs[var]
+        styled += ": "
+        styled += str(var_vals[var])
+        styled += default_units[var]
+        styled += "\n"
     if feed["soul"] is not None:
-        #print("Attempting to update soul.")
-        feed["soul"](feed["styled"])
-    #else:
-        #print("No souls available.")
-    #print(feed["styled"])
+        feed["soul"](styled)
 
 def parse(line):
     # Every line starts with a group ID about which we don't care

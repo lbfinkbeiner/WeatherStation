@@ -1,6 +1,13 @@
 """
-Credit to soumibardhan10 and Abhishek Goyal for the underlying
-structure of the application.
+    File name: weather_gui.py
+    Author: Lukas Finkbeiner
+    Date created: 8/31/2021
+    Date last modified: 9/1/2021
+    Python version: 3.7.3
+
+    Credit to soumibardhan10 and
+    Abhishek Goyal for the underlying
+    structure of the application.
 """
 
 import tkinter as tk
