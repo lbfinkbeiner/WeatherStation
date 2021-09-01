@@ -11,11 +11,14 @@
 """
 
 import tkinter as tk
-from tkinter import ttk  
+from tkinter import ttk
  
 LARGEFONT =("Verdana", 35)
 
 feed = None
+
+waiting = "waiting for data...\n" + \
+          "this can typically take up to ten seconds"
 
 class Weather_Interface(tk.Tk):
      
@@ -54,7 +57,7 @@ class WS1(tk.Frame):
         title = ttk.Label(self, text = "Weather Station 1", font = LARGEFONT)
         title.grid(row = 0, column = 2, padx = 10, pady = 10)
         
-        WS1_details = ttk.Label(self, text = "<waiting for data>")
+        WS1_details = ttk.Label(self, text = waiting)
         WS1_details.grid(row = 2, column = 2)
   
         button_WS2 = ttk.Button(self, text = "WS2",
@@ -86,7 +89,7 @@ class WS2(tk.Frame):
         title = ttk.Label(self, text = "Weather Station 2", font = LARGEFONT)
         title.grid(row = 0, column = 2, padx = 10, pady = 10)
   
-        WS2_details = ttk.Label(self, text = "<waiting for data>")
+        WS2_details = ttk.Label(self, text = waiting)
         WS2_details.grid(row = 2, column = 2)
   
         button_WS1 = ttk.Button(self, text = "WS1",
@@ -107,14 +110,24 @@ class WS2(tk.Frame):
         
         feed["feed2"]["primary_soul"] = update
   
-# This frame will show the discrepancies between the readings of
-# the two weather stations.
+# This frame shows the discrepancies between
+# the readings of the two weather stations.
 class Deltas(tk.Frame):
+    
     def __init__(self, parent, controller):
+        def update(new_text):
+            diff_details.config(text = new_text)
+        
         tk.Frame.__init__(self, parent)
         
         title = ttk.Label(self, text = "Discrepancies", font = LARGEFONT)
         title.grid(row = 0, column = 2, padx = 10, pady = 10)
+        
+        note = ttk.Label(self, text = "WS2 readings minus WS1 readings")
+        note.grid(row = 1, column = 2)
+        
+        diff_details = ttk.Label(self, text = waiting)
+        diff_details.grid(row = 2, column = 2)
   
         button_WS1 = ttk.Button(self, text = "WS1",
             command = lambda : controller.show_frame(WS1))
@@ -132,7 +145,10 @@ class Deltas(tk.Frame):
         command = lambda : controller.show_frame(Graphs))
         button_graphs.grid(row = 4, column = 1, padx = 10, pady = 10)
         
+        feed["diff_soul"] = update
+        
 class Comms(tk.Frame):
+    
     def __init__(self, parent, controller):
         def update_WS1(new_text):
             WS1_details.config(text = new_text)
@@ -148,7 +164,7 @@ class Comms(tk.Frame):
         WS1_title = ttk.Label(self, text = "Weather Station 1")
         WS1_title.grid(row = 1, column = 2)
         
-        WS1_details = ttk.Label(self, text = "<waiting for data>")
+        WS1_details = ttk.Label(self, text = waiting)
         WS1_details.grid(row = 2, column = 2)
   
         button_WS1 = ttk.Button(self, text = "WS1",
@@ -158,7 +174,7 @@ class Comms(tk.Frame):
         WS1_title = ttk.Label(self, text = "Weather Station 2")
         WS1_title.grid(row = 3, column = 2)
         
-        WS2_details = ttk.Label(self, text = "<waiting for data>")
+        WS2_details = ttk.Label(self, text = waiting)
         WS2_details.grid(row = 4, column = 2)
         
         button_WS2 = ttk.Button(self, text ="WS2",

@@ -6,7 +6,8 @@
     Python version: 3.7.3
 """
 
-import re, os, enum
+import re, os, enum, sys
+import numpy as np
 
 class Role(enum.Enum):
     ignore = 0
@@ -92,45 +93,51 @@ var_roles = {
     "Vr": Role.ignore #! double check this one, could go in comms
 }
 
-var_vals = {}
-
-for var in var_abbrs.keys():
-    var_vals[var] = None
-
 # Now back to semi-legitimate programming
 
 def listen(full_feed):
-    while True: # gross
-        if full_feed["feed1"]["updated"]:
-            handle(full_feed["feed1"])
-        if full_feed["feed2"]["updated"]:
-            handle(full_feed["feed2"])
+    var_vals1 = {}
+    var_vals2 = {}
+    for var in var_abbrs.keys():
+        var_vals1[var] = None
+        var_vals2[var] = None
+        
+    while True:
+        try:
+            if full_feed["feed1"]["updated"]:
+                handle(full_feed["feed1"], var_vals1)
+                post_diffs(full_feed, var_vals1, var_vals2)
+            if full_feed["feed2"]["updated"]:
+                handle(full_feed["feed2"], var_vals2)
+                post_diffs(full_feed, var_vals1, var_vals2)
+        except Exception as e:
+            print("TKInter died. Please try again.")
+            sys.exit()
 
-def handle(feed):
+def handle(feed, var_vals):
     feed["updated"] = False
-    parse(feed["raw"])
+    parse(feed["raw"], var_vals)
     primary_styled = ""
     comm_styled = ""
     
     for var in var_abbrs.keys():
+        if var_roles[var] is Role.ignore:
+            continue
+        styled_line = var_abbrs[var]
+        styled_line += ": "
+        styled_line += str(var_vals[var])
+        styled_line += default_units[var]
+        styled_line += "\n"
         if var_roles[var] is Role.primary:
-            primary_styled += var_abbrs[var]
-            primary_styled += ": "
-            primary_styled += str(var_vals[var])
-            primary_styled += default_units[var]
-            primary_styled += "\n"
+            primary_styled += styled_line
         elif var_roles[var] is Role.comms:
-            comm_styled += var_abbrs[var]
-            comm_styled += ": "
-            comm_styled += str(var_vals[var])
-            comm_styled += default_units[var]
-            comm_styled += "\n"
+            comm_styled += styled_line
     if feed["primary_soul"] is not None:
         feed["primary_soul"](primary_styled)
     if feed["comm_soul"] is not None:
         feed["comm_soul"](comm_styled)
 
-def parse(line):
+def parse(line, var_vals):
     # Every line starts with a group ID about which we don't care
     comma_i = line.find(",")
     line = line[(comma_i + 1):]
@@ -168,4 +175,22 @@ def parse(line):
     non_float_start_i = line.find(non_float_element)
     var_val = line[:non_float_start_i]
 
-    var_vals[var_name] = float(var_val)
+    try:
+        var_vals[var_name] = float(var_val)
+    except ValueError:
+        print("Could not convert the following string to float:", var_val)
+    
+def post_diffs(full_feed, var_vals1, var_vals2):
+    styled = ""
+        
+    for var in var_abbrs.keys():
+        if var_roles[var] is not Role.ignore:
+            if var_vals2[var] is None or var_vals1[var] is None:
+                return
+            styled += var_abbrs[var]
+            styled += ": "
+            styled += str(np.around(var_vals2[var] - var_vals1[var], 4))
+            styled += default_units[var]
+            styled += "\n"
+    if full_feed["diff_soul"] is not None:
+        full_feed["diff_soul"](styled)

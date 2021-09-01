@@ -2,7 +2,7 @@
     File name: telnet_receiver.py
     Author: Lukas Finkbeiner
     Date created: 8/30/2021
-    Date last modified: 8/31/2021
+    Date last modified: 9/1/2021
     Python version: 3.7.3
 """
 
@@ -17,7 +17,7 @@ from telnetlib import Telnet
 def receive(feed, HOST, PORT):
     with Telnet(HOST, PORT) as tn:
         latest = ""
-        while True: # gross
+        while True:
             next_byte = tn.read_eager()
             try:
                 next_char = next_byte.decode("ascii")
