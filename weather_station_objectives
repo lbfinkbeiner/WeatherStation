@@ -1,0 +1,44 @@
+The goal is to program a weather station readout with
+easy touch-screen access
+
+Don't forget to revert from Dvorak to QWERTY once you are done programming.
+
+Also before we pass the torch, we should ask Alex how to handle
+the under-volting. It could slowly damage the SD card over time.
+
+Next steps:
+	I. Split the output into pages:
+		1. Weather station 1
+		2. Weather station 2
+		3. Differences
+		4. Graphs
+			This seems tough. There's not a whole lot
+			of screen space but there are A LOT of graphs
+			that I want to do (multiplied by three since
+			we have counterpart graphs across all three pages)
+
+Things I'm thinking about:
+* How do I want to represent wind direction?
+	Maybe we can have a vector arrow spinning around,
+	then we have a separate graph for the intensities
+
+Things I'm asking about:
+* How long of a running average does Alex want for the plots?
+	The readouts are already aggregations. It might be kind of
+	strange or even misleading to aggregate aggregates.
+* Until I ask this question, it might be best to give the user
+    some options, like 5, 10, 50, 100
+
+Things I could try to research for myself (documentation) or I could ask:
+* How does the weather station give minima, maxima, and averages?
+	I mean, what are the intervals over which those aggregations are
+	given?
+
+Based on some preliminary research, it seems like Tkinter is the
+go-to library for Python GUI programming. But I will have something
+of a learning curve, of course.
+
+Things I know I need to do:
+* Make the buttons much larger. Remember that any user interaction
+	is going to be through that 3.5" touch screen.
+		
