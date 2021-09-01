@@ -15,11 +15,12 @@ that updates a specific label on the GUI. Without
 this strange work-around those functions are
 entirely internal and difficult to see from here.
 """
-feed1 = {"raw": "", "updated": False, "soul": None}
-feed2 = {"raw": "", "updated": False, "soul": None}
+feed1 = {"raw": "", "updated": False,
+         "primary_soul": None, "comm_soul": None}
+feed2 = {"raw": "", "updated": False,
+         "primary_soul": None, "comm_soul": None}
 
-full_feed = {"feed1": feed1, "feed2": feed2,
-             "diff_soul": None, "comms_soul": None}
+full_feed = {"feed1": feed1, "feed2": feed2, "diff_soul": None}
 
 def main():
     # the thread numbering is entirely arbitrary

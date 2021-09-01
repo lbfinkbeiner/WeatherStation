@@ -52,7 +52,7 @@ class WS1(tk.Frame):
         tk.Frame.__init__(self, parent)
         
         title = ttk.Label(self, text = "Weather Station 1", font = LARGEFONT)
-        title.grid(row = 0, column = 4, padx = 10, pady = 10)
+        title.grid(row = 0, column = 2, padx = 10, pady = 10)
         
         WS1_details = ttk.Label(self, text = "<waiting for data>")
         WS1_details.grid(row = 2, column = 2)
@@ -73,7 +73,7 @@ class WS1(tk.Frame):
         command = lambda : controller.show_frame(Graphs))
         button_graphs.grid(row = 4, column = 1, padx = 10, pady = 10)
   
-        feed["feed1"]["soul"] = update
+        feed["feed1"]["primary_soul"] = update
   
 class WS2(tk.Frame):
      
@@ -84,7 +84,7 @@ class WS2(tk.Frame):
         tk.Frame.__init__(self, parent)
         
         title = ttk.Label(self, text = "Weather Station 2", font = LARGEFONT)
-        title.grid(row = 0, column = 4, padx = 10, pady = 10)
+        title.grid(row = 0, column = 2, padx = 10, pady = 10)
   
         WS2_details = ttk.Label(self, text = "<waiting for data>")
         WS2_details.grid(row = 2, column = 2)
@@ -105,7 +105,7 @@ class WS2(tk.Frame):
         command = lambda : controller.show_frame(Graphs))
         button_graphs.grid(row = 4, column = 1, padx = 10, pady = 10)
         
-        feed["feed2"]["soul"] = update
+        feed["feed2"]["primary_soul"] = update
   
 # This frame will show the discrepancies between the readings of
 # the two weather stations.
@@ -114,7 +114,7 @@ class Deltas(tk.Frame):
         tk.Frame.__init__(self, parent)
         
         title = ttk.Label(self, text = "Discrepancies", font = LARGEFONT)
-        title.grid(row = 0, column = 4, padx = 10, pady = 10)
+        title.grid(row = 0, column = 2, padx = 10, pady = 10)
   
         button_WS1 = ttk.Button(self, text = "WS1",
             command = lambda : controller.show_frame(WS1))
@@ -134,14 +134,32 @@ class Deltas(tk.Frame):
         
 class Comms(tk.Frame):
     def __init__(self, parent, controller):
+        def update_WS1(new_text):
+            WS1_details.config(text = new_text)
+        
+        def update_WS2(new_text):
+            WS2_details.config(text = new_text)
+            
         tk.Frame.__init__(self, parent)
         
         title = ttk.Label(self, text = "Communications", font = LARGEFONT)
-        title.grid(row = 0, column = 4, padx = 10, pady = 10)
+        title.grid(row = 0, column = 2, padx = 10, pady = 10)
+        
+        WS1_title = ttk.Label(self, text = "Weather Station 1")
+        WS1_title.grid(row = 1, column = 2)
+        
+        WS1_details = ttk.Label(self, text = "<waiting for data>")
+        WS1_details.grid(row = 2, column = 2)
   
         button_WS1 = ttk.Button(self, text = "WS1",
             command = lambda : controller.show_frame(WS1))
         button_WS1.grid(row = 1, column = 1, padx = 10, pady = 10)
+        
+        WS1_title = ttk.Label(self, text = "Weather Station 2")
+        WS1_title.grid(row = 3, column = 2)
+        
+        WS2_details = ttk.Label(self, text = "<waiting for data>")
+        WS2_details.grid(row = 4, column = 2)
         
         button_WS2 = ttk.Button(self, text ="WS2",
             command = lambda : controller.show_frame(WS2))
@@ -155,12 +173,15 @@ class Comms(tk.Frame):
         command = lambda : controller.show_frame(Graphs))
         button_graphs.grid(row = 4, column = 1, padx = 10, pady = 10)
         
+        feed["feed1"]["comm_soul"] = update_WS1
+        feed["feed2"]["comm_soul"] = update_WS2
+        
 class Graphs(tk.Frame):
     def __init__(self, parent, controller):
         tk.Frame.__init__(self, parent)
         
         title = ttk.Label(self, text = "Real-time Graphs", font = LARGEFONT)
-        title.grid(row = 0, column = 4, padx = 10, pady = 10)
+        title.grid(row = 0, column = 2, padx = 10, pady = 10)
   
         button_WS1 = ttk.Button(self, text = "WS1",
             command = lambda : controller.show_frame(WS1))
@@ -184,14 +205,9 @@ def start(input_feed):
     
     app = Weather_Interface()
     app.mainloop()
-    """
-    print("Refresh called")
-    while True:
-        print("looping")
-        if feed["styled_changed"]:
-            print("I should be updating!")
-            souls["WS1"](feed["styled"])
-            feed["styled_changed"] = False
-    """
-# we want 440 x 280
-# It automatically resizes, so I suppose we can work with that
+    
+"""
+We want 440 x 280, but
+it automatically resizes;
+I suppose we can work with that.
+"""

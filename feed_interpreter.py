@@ -86,12 +86,11 @@ var_roles = {
     "Hi": Role.ignore,
     "Rp": Role.ignore,
     "Hp": Role.ignore,
-    "Th": Role.ignore, # double check this one, could go in comms
+    "Th": Role.ignore, #! double check this one, could go in comms
     "Vh": Role.comms,
     "Vs": Role.comms,
-    "Vr": Role.ignore # double check this one, could go in comms
+    "Vr": Role.ignore #! double check this one, could go in comms
 }
-
 
 var_vals = {}
 
@@ -110,16 +109,26 @@ def listen(full_feed):
 def handle(feed):
     feed["updated"] = False
     parse(feed["raw"])
-    styled = ""
+    primary_styled = ""
+    comm_styled = ""
     
     for var in var_abbrs.keys():
-        styled += var_abbrs[var]
-        styled += ": "
-        styled += str(var_vals[var])
-        styled += default_units[var]
-        styled += "\n"
-    if feed["soul"] is not None:
-        feed["soul"](styled)
+        if var_roles[var] is Role.primary:
+            primary_styled += var_abbrs[var]
+            primary_styled += ": "
+            primary_styled += str(var_vals[var])
+            primary_styled += default_units[var]
+            primary_styled += "\n"
+        elif var_roles[var] is Role.comms:
+            comm_styled += var_abbrs[var]
+            comm_styled += ": "
+            comm_styled += str(var_vals[var])
+            comm_styled += default_units[var]
+            comm_styled += "\n"
+    if feed["primary_soul"] is not None:
+        feed["primary_soul"](primary_styled)
+    if feed["comm_soul"] is not None:
+        feed["comm_soul"](comm_styled)
 
 def parse(line):
     # Every line starts with a group ID about which we don't care
@@ -141,7 +150,7 @@ def parse(line):
         comma_i = line.find(",")
 
     # We just have one last variable to parse.
-    # Unfortunately, it is not comma-delimited
+    # Unfortunately, it is not comma-delimited.
     equals_i = line.find("=")
     var_name = line[:equals_i]
     if var_name == "Id":
