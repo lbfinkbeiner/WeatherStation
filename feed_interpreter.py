@@ -109,18 +109,12 @@ def listen(full_feed):
     while True:
         try:
             if full_feed["feed1"]["updated"]:
-                stupid_counter += 1
                 handle(full_feed["feed1"], var_vals1)
                 post_diffs(full_feed, var_vals1, var_vals2)
             if full_feed["feed2"]["updated"]:
-                stupid_counter += 1
                 handle(full_feed["feed2"], var_vals2)
                 post_diffs(full_feed, var_vals1, var_vals2)
-
-            if stupid_counter == 2:
-                t = np.arange(0, 3, 0.01)
-                full_feed["graph_soul"](-2 * np.log(2 * np.pi * t + 1))
-        
+ 
         except Exception as e:
             print(e)
             traceback.print_exc()
@@ -136,6 +130,31 @@ def handle(feed, var_vals):
     for var in var_abbrs.keys():
         if var_roles[var] is Role.ignore:
             continue
+
+        # for demo purposes, we are hard-coding a data len cap of 10
+        if var == "Ta":
+            graph_len = feed["graph_data"][0].size
+            if graph_len.size == 0:
+                feed["graph_data"][0] = np.array([0])
+                feed["graph_data"][1] = np.array([var_vals[var]])
+            elif graph_len == 10:
+                feed["graph_data"][0] = np.roll(feed["graph_data"][0], -1)
+                feed["graph_data"][1] = np.roll(feed["graph_data"][1], -1)
+                feed["graph_data"][0][9] = feed["graph_data"][0][8] + 1
+                feed["graph_data"][1][9] = var_vals[var]
+            else:
+                last_x = feed["graph_data"][0][graph_len]
+                x_element = np.array([last_x + 1])
+                y_element = np.array([var_vals[var]])
+                feed["graph_data"][0] = np.append(
+                        feed["graph_data"][0],
+                        x_element)
+                feed["graph_data"][1] = np.append(
+                        feed["graph_data"][1],
+                        y_element)
+            
+            full_feed["graph_soul"]()
+
         styled_line = var_abbrs[var]
         styled_line += ": "
         styled_line += str(var_vals[var])

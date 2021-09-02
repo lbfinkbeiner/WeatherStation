@@ -41,4 +41,5 @@ of a learning curve, of course.
 Things I know I need to do:
 * Make the buttons much larger. Remember that any user interaction
 	is going to be through that 3.5" touch screen.
-		
+* The program should automatically dump variable values into a CSV file
+* Then we can keep logs for the weather of each day.		

@@ -8,6 +8,7 @@
 
 import threading
 import feed_interpreter, telnet_receiver, weather_gui
+import numpy as np
 
 """
 'soul' is just jargon I made up to describe a function
@@ -21,7 +22,7 @@ feed2 = {"raw": "", "updated": False,
          "primary_soul": None, "comm_soul": None}
 
 full_feed = {"feed1": feed1, "feed2": feed2, "diff_soul": None,
-                "graph_soul": None}
+        "graph_soul": None, "graph_data": np.array([np.array([]), np.array([])])}
 
 def main():
     # the thread numbering is entirely arbitrary

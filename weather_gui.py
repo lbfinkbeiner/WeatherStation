@@ -202,8 +202,12 @@ class Comms(tk.Frame):
         
 class Graphs(tk.Frame):
     def __init__(self, parent, controller):
-        def update(new_data):
-            line1.set_ydata(new_data)
+        def update():
+            x = feed["graph_data"][0]
+            y = feed["graph_data"][1]
+            line1.set_xdata(x)
+            line1.set_ydata(y)
+            #line1.set_ydata(new_data)
             canvas.draw()
             """
             Autoscale is not working as expected,
@@ -223,7 +227,9 @@ class Graphs(tk.Frame):
             time as the x coordinate (that requires us to
             include a universal timer in this program)
             """    
-            ax.set_ylim((new_data.min(), new_data.max()))
+            if x.size > 1:
+                ax.set_xlim((x.min(), x.max()))
+                ax.set_ylim((y.min(), y.max()))
             canvas.flush_events()
             #ax.autoscale()
 
