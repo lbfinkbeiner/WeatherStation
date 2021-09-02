@@ -2,7 +2,7 @@
     File name: weather_gui.py
     Author: Lukas Finkbeiner
     Date created: 8/31/2021
-    Date last modified: 9/1/2021
+    Date last modified: 9/2/2021
     Python version: 3.7.3
 
     Credit to soumibardhan10 and
@@ -12,7 +12,15 @@
 
 import tkinter as tk
 from tkinter import ttk
- 
+
+# This next import is currently for testing
+# purposes and should be axed, maybe
+import numpy as np
+
+from matplotlib.backends.backend_tkagg import (
+        FigureCanvasTkAgg, NavigationToolbar2Tk)
+from matplotlib.figure import Figure
+
 LARGEFONT =("Verdana", 35)
 
 feed = None
@@ -214,6 +222,20 @@ class Graphs(tk.Frame):
         button_comms = ttk.Button(self, text = "Comm.s",
         command = lambda : controller.show_frame(Comms))
         button_comms.grid(row = 4, column = 1, padx = 10, pady = 10)
+
+        # Here are some matplotlib tests
+
+        fig = Figure(figsize=(5, 2), dpi=100)
+        t = np.arange(0, 3, 0.01)
+        fig.add_subplot().plot(t, 2 * np.sin(2 * np.pi * t))
+
+        canvas = FigureCanvasTkAgg(fig, self)
+        canvas.draw()
+
+        canvas.get_tk_widget().grid(row=4, column=1, padx=10, pady=10)
+
+        #canvas.get_tk_widget().pack(
+        #        side=tk.TOP, fill=tk.BOTH, expand=1)
 
 def start(input_feed):
     global feed
