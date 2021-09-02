@@ -93,6 +93,9 @@ var_roles = {
     "Vr": Role.ignore #! double check this one, could go in comms
 }
 
+# garbage import
+import traceback
+
 # Now back to semi-legitimate programming
 
 def listen(full_feed):
@@ -114,12 +117,13 @@ def listen(full_feed):
                 handle(full_feed["feed2"], var_vals2)
                 post_diffs(full_feed, var_vals1, var_vals2)
 
-            if stupid_counter == 3:
+            if stupid_counter == 2:
                 t = np.arange(0, 3, 0.01)
-                full_feed["graph_soul"](2 * np.log(2 * np.pi * t + 1))
+                full_feed["graph_soul"](-2 * np.log(2 * np.pi * t + 1))
         
         except Exception as e:
             print(e)
+            traceback.print_exc()
             print("TKInter probably died. Please try again.")
             sys.exit()
 

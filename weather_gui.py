@@ -205,7 +205,27 @@ class Graphs(tk.Frame):
         def update(new_data):
             line1.set_ydata(new_data)
             canvas.draw()
+            """
+            Autoscale is not working as expected,
+            so this is a work-around.
+
+            We need to be careful about these next two lines,
+            and to update them only when absolutely necessary,
+            because real-time plotting will already be an
+            incredible burden on our poor Pi.
+            """
+            # ax.set_xlim <- come back to this when we start
+                # adding points one at a time
+            """
+            don't forget that, for easy mode programming,
+            the x-axis will simply indicate index.
+            For the release version, we will need to indicate
+            time as the x coordinate (that requires us to
+            include a universal timer in this program)
+            """    
+            ax.set_ylim((new_data.min(), new_data.max()))
             canvas.flush_events()
+            #ax.autoscale()
 
         tk.Frame.__init__(self, parent)
         
@@ -231,10 +251,10 @@ class Graphs(tk.Frame):
         # Here are some matplotlib tests
 
         fig = Figure(figsize=(5, 2), dpi=100)
-        #ax = fig.add_subplot(111)
+        ax = fig.add_subplot(111)
 
         t = np.arange(0, 3, 0.01)
-        line1, = fig.add_subplot().plot(t, 2 * np.sin(2 * np.pi * t))
+        line1, = ax.plot(t, 2 * np.sin(2 * np.pi * t))
 
         canvas = FigureCanvasTkAgg(fig, self)
         canvas.draw()
