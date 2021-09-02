@@ -2,7 +2,7 @@
     File name: feed_interpreter.py
     Author: Lukas Finkbeiner
     Date created: 8/30/2021
-    Date last modified: 9/1/2021
+    Date last modified: 9/2/2021
     Python version: 3.7.3
 """
 
@@ -101,17 +101,26 @@ def listen(full_feed):
     for var in var_abbrs.keys():
         var_vals1[var] = None
         var_vals2[var] = None
-        
+       
+    stupid_counter = 0   
     while True:
         try:
             if full_feed["feed1"]["updated"]:
+                stupid_counter += 1
                 handle(full_feed["feed1"], var_vals1)
                 post_diffs(full_feed, var_vals1, var_vals2)
             if full_feed["feed2"]["updated"]:
+                stupid_counter += 1
                 handle(full_feed["feed2"], var_vals2)
                 post_diffs(full_feed, var_vals1, var_vals2)
+
+            if stupid_counter == 3:
+                t = np.arange(0, 3, 0.01)
+                full_feed["graph_soul"](2 * np.log(2 * np.pi * t + 1))
+        
         except Exception as e:
-            print("TKInter died. Please try again.")
+            print(e)
+            print("TKInter probably died. Please try again.")
             sys.exit()
 
 def handle(feed, var_vals):

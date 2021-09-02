@@ -202,6 +202,11 @@ class Comms(tk.Frame):
         
 class Graphs(tk.Frame):
     def __init__(self, parent, controller):
+        def update(new_data):
+            line1.set_ydata(new_data)
+            canvas.draw()
+            canvas.flush_events()
+
         tk.Frame.__init__(self, parent)
         
         title = ttk.Label(self, text = "Real-time Graphs", font = LARGEFONT)
@@ -226,8 +231,10 @@ class Graphs(tk.Frame):
         # Here are some matplotlib tests
 
         fig = Figure(figsize=(5, 2), dpi=100)
+        #ax = fig.add_subplot(111)
+
         t = np.arange(0, 3, 0.01)
-        fig.add_subplot().plot(t, 2 * np.sin(2 * np.pi * t))
+        line1, = fig.add_subplot().plot(t, 2 * np.sin(2 * np.pi * t))
 
         canvas = FigureCanvasTkAgg(fig, self)
         canvas.draw()
@@ -236,6 +243,7 @@ class Graphs(tk.Frame):
 
         #canvas.get_tk_widget().pack(
         #        side=tk.TOP, fill=tk.BOTH, expand=1)
+        feed["graph_soul"] = update
 
 def start(input_feed):
     global feed
