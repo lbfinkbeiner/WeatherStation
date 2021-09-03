@@ -38,29 +38,36 @@ weather variables. Maybe we can add a string list to the
 full_feed dictionary, where each string is a variable label.
 That seems like kind of a lame solution, because it is ad-hoc
 and conceals theory from the programmer...
+
+Important finalization note:
+    as of 03.09.2021:1506 I am just making this
+    dictionary up off of the top of my head.
+    Alex may want to take a look at it to check off
+    on the values.
 """
 yap = {
-    "Dn": " degrees",
-    "Dm": " degrees",
-    "Dx": " degrees",
-    "Sn": " m/s",
-    "Sm": " m/s",
-    "Sx": " m/s",
-    "Ta": " deg C",
-    "Ua": "%",
-    "Pa": " hPa",
-    "Rc": " mm",
-    "Rd": " s",
-    "Ri": " mm/h",
-    "Hc": " hits/cc",
-    "Hd": " s",
-    "Hi": " hits/cc/h",
-    "Rp": " mm/h",
-    "Hp": " hits/cc/h",
-    "Th": " deg C",
-    "Vh": " V",
-    "Vs": " V",
-    "Vr": " V"
+    "Dn": 5, # superficially this seems like a good idea, but
+    # it might look weird to have negative regions of the axis...
+    "Dm": 5,
+    "Dx": 5,
+    "Sn": 2, # ditto
+    "Sm": 2, # ditto
+    "Sx": 2, # ditto
+    "Ta": 1,
+    "Ua": 1, # ditto
+    "Pa": 10, # we should look at a demo graph to get a better sense of this
+    "Rc": 1,
+    "Rd": 20,
+    "Ri": 1,
+    "Hc": 60,
+    "Hd": 20,
+    "Hi": 30,
+    "Rp": 2,
+    "Hp": 2,
+    "Th": 1,
+    "Vh": 1.5,
+    "Vs": 1.5,
+    "Vr": 1.5
 }
 
 class Weather_Interface(tk.Tk):
