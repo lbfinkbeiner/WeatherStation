@@ -1,3 +1,30 @@
+CSV interface idea:
+* We should have a hard-coded "vertical padding" dictionary
+	for our graphs. Depending on what we consider reasonable
+	for each quantity, the y axis will run a bit long in each
+	direction. Here is an example demonstrating the necessity:
+		When we first turn on the monitor and look at
+		the temperatures, there may be change
+		by just a tenth of a degree. This creates an odd
+		plummet graph with neither the before nor after
+		being clear.
+* Alex wants the program to run as  soon as the Pi is turned on
+* When the program boots, it should check
+	whether it is rebooting from a crash
+	* How does the program know this?
+		There will be a special file called log.txt
+		If there is a graceful shutdown note, we're fine.
+		Whether or not there is a graceful shutdown note,
+		we wipe the file. That is how we know that we're
+		not being misled by an old graceful shutdown note.
+(depending on
+	how long the Pi was knocked out, it either looks
+	for a day-file to continue, or it starts a new one)
+
+
+
+
+
 The goal is to program a weather station readout with
 easy touch-screen access
 

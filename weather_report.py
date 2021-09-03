@@ -2,7 +2,7 @@
     File name: weather_report.py
     Author: Lukas Finkbeiner
     Date created: 8/30/2021
-    Date last modified: 9/2/2021
+    Date last modified: 9/3/2021
     Python version: 3.7.3
 """
 
@@ -21,8 +21,18 @@ feed1 = {"raw": "", "updated": False,
 feed2 = {"raw": "", "updated": False,
          "primary_soul": None, "comm_soul": None}
 
-full_feed = {"feed1": feed1, "feed2": feed2, "diff_soul": None,
-        "graph_soul": None, "graph_data": np.array([np.array([]), np.array([])])}
+full_feed = {
+    "feed1": feed1,
+    "feed2": feed2,
+    "diff_soul": None,
+    "graph_soul": None,
+    "graph_data": {
+        "Ta": {
+            "x": None,
+            "y": None
+        }
+    }
+}
 
 def main():
     # the thread numbering is entirely arbitrary

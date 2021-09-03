@@ -2,7 +2,7 @@
     File name: feed_interpreter.py
     Author: Lukas Finkbeiner
     Date created: 8/30/2021
-    Date last modified: 9/2/2021
+    Date last modified: 9/3/2021
     Python version: 3.7.3
 """
 
@@ -130,42 +130,21 @@ def handle(feed, var_vals):
     for var in var_abbrs.keys():
         if var_roles[var] is Role.ignore:
             continue
-
-        # for demo purposes, we are hard-coding a data len cap of 10
-        if var == "Ta":
-            graph_len = feed["graph_data"][0].size
-            if graph_len.size == 0:
-                feed["graph_data"][0] = np.array([0])
-                feed["graph_data"][1] = np.array([var_vals[var]])
-            elif graph_len == 10:
-                feed["graph_data"][0] = np.roll(feed["graph_data"][0], -1)
-                feed["graph_data"][1] = np.roll(feed["graph_data"][1], -1)
-                feed["graph_data"][0][9] = feed["graph_data"][0][8] + 1
-                feed["graph_data"][1][9] = var_vals[var]
-            else:
-                last_x = feed["graph_data"][0][graph_len]
-                x_element = np.array([last_x + 1])
-                y_element = np.array([var_vals[var]])
-                feed["graph_data"][0] = np.append(
-                        feed["graph_data"][0],
-                        x_element)
-                feed["graph_data"][1] = np.append(
-                        feed["graph_data"][1],
-                        y_element)
-            
-            full_feed["graph_soul"]()
-
+        
         styled_line = var_abbrs[var]
         styled_line += ": "
         styled_line += str(var_vals[var])
         styled_line += default_units[var]
         styled_line += "\n"
+        
         if var_roles[var] is Role.primary:
             primary_styled += styled_line
         elif var_roles[var] is Role.comms:
             comm_styled += styled_line
+    
     if feed["primary_soul"] is not None:
         feed["primary_soul"](primary_styled)
+    
     if feed["comm_soul"] is not None:
         feed["comm_soul"](comm_styled)
 
@@ -217,12 +196,41 @@ def post_diffs(full_feed, var_vals1, var_vals2):
         
     for var in var_abbrs.keys():
         if var_roles[var] is not Role.ignore:
+            
             if var_vals2[var] is None or var_vals1[var] is None:
                 return
+            
+            # for demo purposes, we are hard-coding a data len cap of 10
+            if var == "Ta":
+                gd = full_feed["graph_data"]["Ta"]
+                #print("var is Ta, value is", var_vals1[var]) 
+                #print("graph len is", graph_len)
+                if gd["x"] is None:
+                    gd["x"] = np.array([0])
+                    gd["y"] = np.array([var_vals1[var]])
+                    # full_feed["graph_data"] = np.array([x_seed, y_seed])
+                elif gd["x"].size == 10:
+                    gd["x"] = np.roll(gd["x"], -1)
+                    gd["y"] = np.roll(gd["y"], -1)
+                    gd["x"][9] = gd["x"][8] + 1
+                    gd["y"][9] = var_vals1[var]
+                else:
+                    last_i = gd["x"].size - 1
+                    last_x = gd["x"][last_i]
+                    x_element = np.array([last_x + 1])
+                    y_element = np.array([var_vals1[var]])
+                    gd["x"] = np.append(gd["x"], x_element)
+                    gd["y"] = np.append(gd["y"], y_element)
+                 
+                print(full_feed["graph_data"]["Ta"])
+                #print(full_feed["graph_data"] is None)
+                full_feed["graph_soul"]()
+
             styled += var_abbrs[var]
             styled += ": "
             styled += str(np.around(var_vals2[var] - var_vals1[var], 4))
             styled += default_units[var]
             styled += "\n"
+    
     if full_feed["diff_soul"] is not None:
         full_feed["diff_soul"](styled)

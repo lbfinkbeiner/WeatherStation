@@ -28,6 +28,41 @@ feed = None
 waiting = "waiting for data...\n" + \
           "this can typically take up to ten seconds"
 
+"""
+This is a hard-coded dictionary which pads the y-axis limits
+symmetrically, so that tiny deviations do not produce unreadable graphs.
+
+Warning! This code is not ready for production because
+it assumes that weather_gui knows about all of the different
+weather variables. Maybe we can add a string list to the
+full_feed dictionary, where each string is a variable label.
+That seems like kind of a lame solution, because it is ad-hoc
+and conceals theory from the programmer...
+"""
+yap = {
+    "Dn": " degrees",
+    "Dm": " degrees",
+    "Dx": " degrees",
+    "Sn": " m/s",
+    "Sm": " m/s",
+    "Sx": " m/s",
+    "Ta": " deg C",
+    "Ua": "%",
+    "Pa": " hPa",
+    "Rc": " mm",
+    "Rd": " s",
+    "Ri": " mm/h",
+    "Hc": " hits/cc",
+    "Hd": " s",
+    "Hi": " hits/cc/h",
+    "Rp": " mm/h",
+    "Hp": " hits/cc/h",
+    "Th": " deg C",
+    "Vh": " V",
+    "Vs": " V",
+    "Vr": " V"
+}
+
 class Weather_Interface(tk.Tk):
      
     def __init__(self, *args, **kwargs):
@@ -203,8 +238,8 @@ class Comms(tk.Frame):
 class Graphs(tk.Frame):
     def __init__(self, parent, controller):
         def update():
-            x = feed["graph_data"][0]
-            y = feed["graph_data"][1]
+            x = feed["graph_data"]["Ta"]["x"]
+            y = feed["graph_data"]["Ta"]["y"]
             line1.set_xdata(x)
             line1.set_ydata(y)
             #line1.set_ydata(new_data)
