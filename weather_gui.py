@@ -26,7 +26,7 @@ LARGEFONT =("Verdana", 35)
 feed = None
 
 waiting = "waiting for data...\n" + \
-          "this can typically take up to ten seconds"
+          "this can typically take up to twenty seconds"
 
 """
 This is a hard-coded dictionary which pads the y-axis limits
@@ -270,8 +270,17 @@ class Graphs(tk.Frame):
             include a universal timer in this program)
             """    
             if x.size > 1:
-                ax.set_xlim((x.min(), x.max()))
-                ax.set_ylim((y.min(), y.max()))
+                print(x.min(), x.max())
+                # This next part is REALLY weird, and I don't
+                # understand it at all. Does Wael know?
+                left = 0
+                if x.min() > 0:
+                    left = x.min() + 1
+                right = x.max() + 1
+                ax.set_xlim(left, right)
+                bottom = y.min() - yap["Ta"]
+                top = y.max() + yap["Ta"]
+                ax.set_ylim(bottom, top)
             canvas.flush_events()
             #ax.autoscale()
 

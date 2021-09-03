@@ -203,12 +203,9 @@ def post_diffs(full_feed, var_vals1, var_vals2):
             # for demo purposes, we are hard-coding a data len cap of 10
             if var == "Ta":
                 gd = full_feed["graph_data"]["Ta"]
-                #print("var is Ta, value is", var_vals1[var]) 
-                #print("graph len is", graph_len)
                 if gd["x"] is None:
                     gd["x"] = np.array([0])
                     gd["y"] = np.array([var_vals1[var]])
-                    # full_feed["graph_data"] = np.array([x_seed, y_seed])
                 elif gd["x"].size == 10:
                     gd["x"] = np.roll(gd["x"], -1)
                     gd["y"] = np.roll(gd["y"], -1)
@@ -222,8 +219,6 @@ def post_diffs(full_feed, var_vals1, var_vals2):
                     gd["x"] = np.append(gd["x"], x_element)
                     gd["y"] = np.append(gd["y"], y_element)
                  
-                print(full_feed["graph_data"]["Ta"])
-                #print(full_feed["graph_data"] is None)
                 full_feed["graph_soul"]()
 
             styled += var_abbrs[var]
