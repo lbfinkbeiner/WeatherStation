@@ -34,6 +34,8 @@ full_feed = {
     }
 }
 
+dt = None
+
 def main():
     # the thread numbering is entirely arbitrary
     t0 = threading.Thread(
@@ -50,13 +52,13 @@ def main():
     
     t2 = threading.Thread(
         target=feed_interpreter.listen,
-        args=(full_feed,)
+        args=(full_feed, dt,)
     )
     t2.start()
     
     t3 = threading.Thread(
         target=weather_gui.start,
-        args=(full_feed,)
+        args=(full_feed, dt,)
     )
     t3.start()
 

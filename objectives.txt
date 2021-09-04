@@ -21,6 +21,12 @@ CSV interface idea:
 	how long the Pi was knocked out, it either looks
 	for a day-file to continue, or it starts a new one)
 
+* Since we want to write to and read from a CSV file, we should
+	mantain an internal pandas table that tracks all variable values.
+	Then we can pick an arbitrary interval (make sure it links
+	to an ALL_CAPS constant listed clearly at the top)
+	and, at the end of every interval, update the day's CSV
+	and update the log.txt with the most recent successful save.
 
 
 

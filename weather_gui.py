@@ -270,9 +270,9 @@ class Graphs(tk.Frame):
             include a universal timer in this program)
             """    
             if x.size > 1:
-                print(x.min(), x.max())
                 # This next part is REALLY weird, and I don't
-                # understand it at all. Does Wael know?
+                # understand at all why I had to add unity.
+                # Does Wael know?
                 left = 0
                 if x.min() > 0:
                     left = x.min() + 1
