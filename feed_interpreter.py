@@ -7,6 +7,7 @@
 """
 
 import re, os, enum, sys
+import time as t
 import numpy as np
 
 class Role(enum.Enum):
@@ -109,10 +110,10 @@ def listen(full_feed, df1, df2):
         try:
             if full_feed["feed1"]["updated"]:
                 handle(full_feed["feed1"], var_vals1)
-                post_diffs(full_feed, var_vals1, var_vals2)
+                post_diffs(full_feed, var_vals1, var_vals2, df1)
             if full_feed["feed2"]["updated"]:
                 handle(full_feed["feed2"], var_vals2)
-                post_diffs(full_feed, var_vals1, var_vals2)
+                post_diffs(full_feed, var_vals1, var_vals2, df2)
  
         except Exception as e:
             print(e)
@@ -120,12 +121,19 @@ def listen(full_feed, df1, df2):
             print("TKInter probably died. Please try again.")
             sys.exit()
 
-def handle(feed, var_vals):
+def handle(feed, var_vals, df):
     feed["updated"] = False
     parse(feed["raw"], var_vals)
     primary_styled = ""
     comm_styled = ""
-    
+   
+    # This approach (recreating the data frame every time
+    # we want to add a row) may prove computationally
+    # infeasible for the Pi by the end of the day
+    preexisting_times = list(df.index)
+    new_index = preexisting_times + [t.time()]
+    dt.reindex(new_index)
+
     for var in var_abbrs.keys():
         if var_roles[var] is Role.ignore:
             continue
