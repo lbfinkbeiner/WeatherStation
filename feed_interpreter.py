@@ -105,7 +105,6 @@ def listen(full_feed, df1, df2):
         var_vals1[var] = None
         var_vals2[var] = None
        
-    stupid_counter = 0   
     while True:
         try:
             if full_feed["feed1"]["updated"]:

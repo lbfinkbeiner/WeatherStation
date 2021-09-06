@@ -13,6 +13,9 @@ HOST_ws2 = 'weatherport-secondary.hcro.org'
 PORT_ws2 = 4001
 
 from telnetlib import Telnet
+import re
+
+batch_terminator = "Vr=\d+\.\d+V"
 
 def receive(feed, HOST, PORT):
     with Telnet(HOST, PORT) as tn:
@@ -21,13 +24,21 @@ def receive(feed, HOST, PORT):
             next_byte = tn.read_eager()
             try:
                 next_char = next_byte.decode("ascii")
-                if next_char.isspace():
-                    feed["raw"] = latest
+                
+                # we need to figure out how to send all batches at once
+
+                latest += next_char
+                terminator_match = re.search(batch_terminator, latest)
+
+                if terminator_match is not None:
+                    terminator = terminator_match.group(0)
+                    terminator_start_i = latest.find(terminator)
+                    terminator_end_i = terminator_start_i + len(terminator)
+
+                    feed["raw"] = latest[:terminator_end_i]
                     # publish the change
                     feed["updated"] = True
                     latest = ""
-                else:
-                    latest += next_char
             except UnicodeDecodeError:
                 # I am not really sure what I should do
                 # about this, if anything.
