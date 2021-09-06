@@ -79,7 +79,9 @@ def parse(feed, df):
         next_var = line[:comma_i]
         sides = next_var.split("=")
         var_name = sides[0]
-        if s.var_roles[var_name] is not s.Role.ignore:
+
+        if var_name in s.var_roles.keys() and \
+                s.var_roles[var_name] is not s.Role.ignore:
             float_pattern = r"\d+(\.\d+)?"
             var_val = re.search(float_pattern, sides[1]).group(0)
     
