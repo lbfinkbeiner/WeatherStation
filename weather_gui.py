@@ -110,6 +110,7 @@ class WS1(tk.Frame):
        
         def close_tool():
             s.shutting_down = True
+            s.save_to_disk()
             global destroy
             destroy()
 

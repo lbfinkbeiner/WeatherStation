@@ -27,10 +27,7 @@ def main():
     )
     t2.start()
     
-    t3 = threading.Thread(
-        target=weather_gui.start
-    )
-    t3.start()
+    weather_gui.start()
 
 main()
 
