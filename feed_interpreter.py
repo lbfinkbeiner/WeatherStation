@@ -8,7 +8,7 @@
 
 import re, os, sys
 import numpy as np
-import shared
+import shared as s
 # garbage import
 import traceback
 
@@ -17,11 +17,11 @@ import traceback
 def listen():
     while True:
         try:
-            if shared.feed1["updated"]:
-                handle(shared.feed1, shared.df1)
+            if s.feed1["updated"]:
+                handle(s.feed1, s.df1)
                 post_diffs()
-            if shared.feed2["updated"]:
-                handle(shared.feed2, shared.df2)
+            if s.feed2["updated"]:
+                handle(s.feed2, s.df2)
                 post_diffs()
  
         except Exception as e:
@@ -38,20 +38,20 @@ def handle(feed, df):
     primary_styled = ""
     comm_styled = ""
 
-    for var in shared.var_abbrs.keys():
-        if shared.var_roles[var] is shared.Role.ignore:
+    for var in s.var_abbrs.keys():
+        if s.var_roles[var] is s.Role.ignore:
             continue
         
-        styled_line = shared.var_abbrs[var]
+        styled_line = s.var_abbrs[var]
         styled_line += ": "
         # we do not need to worry about this being None, because "updated" was marked True
         styled_line += str(df.loc[feed["latest_index"], var])
-        styled_line += shared.default_units[var]
+        styled_line += s.default_units[var]
         styled_line += "\n"
         
-        if shared.var_roles[var] is shared.Role.primary:
+        if s.var_roles[var] is s.Role.primary:
             primary_styled += styled_line
-        elif shared.var_roles[var] is shared.Role.comms:
+        elif s.var_roles[var] is s.Role.comms:
             comm_styled += styled_line
     
     if feed["primary_soul"] is not None:
@@ -79,7 +79,7 @@ def parse(feed, df):
         next_var = line[:comma_i]
         sides = next_var.split("=")
         var_name = sides[0]
-        if shared.var_roles[var_name] is not shared.Role.ignore:
+        if s.var_roles[var_name] is not s.Role.ignore:
             float_pattern = r"\d+(\.\d+)?"
             var_val = re.search(float_pattern, sides[1]).group(0)
     
@@ -115,11 +115,11 @@ def parse(feed, df):
 def post_diffs():
     styled = ""
         
-    for var in shared.var_abbrs.keys():
-        if shared.var_roles[var] is not shared.Role.ignore:
+    for var in s.var_abbrs.keys():
+        if s.var_roles[var] is not s.Role.ignore:
             try:
-                val2 = shared.df2.loc[shared.feed2["latest_index"], var]
-                val1 = shared.df1.loc[shared.feed1["latest_index"], var]
+                val2 = s.df2.loc[s.feed2["latest_index"], var]
+                val1 = s.df1.loc[s.feed1["latest_index"], var]
             except KeyError:
                 return # not enough values yet to post differences
 
@@ -130,7 +130,7 @@ def post_diffs():
 
             # for demo purposes, we are hard-coding a data len cap of 10
             if var == "Ta":
-                gd = shared.graph_data["Ta"]
+                gd = s.graph_data["Ta"]
                 if gd["x"] is None:
                     gd["x"] = np.array([0])
                     gd["y"] = np.array(val1)
@@ -147,14 +147,14 @@ def post_diffs():
                     gd["x"] = np.append(gd["x"], x_element)
                     gd["y"] = np.append(gd["y"], y_element)
                  
-                shared.graph_soul()
+                s.graph_soul()
 
-            styled += shared.var_abbrs[var]
+            styled += s.var_abbrs[var]
             styled += ": "
             styled += str(np.around(val2 - val1, 4))
-            styled += shared.default_units[var]
+            styled += s.default_units[var]
             styled += "\n"
     
-    if shared.diff_soul is not None:
-        shared.diff_soul(styled)
+    if s.diff_soul is not None:
+        s.diff_soul(styled)
 

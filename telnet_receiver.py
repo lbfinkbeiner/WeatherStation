@@ -15,7 +15,7 @@ PORT_WS2 = 4001
 from telnetlib import Telnet
 import re
 import time as t
-import shared
+import shared as s
 
 # This pattern indicates the end of a full transmission (one full set of variable values)
 batch_terminator = "Vr=\d+\.\d+V"
@@ -51,8 +51,8 @@ def receive(feed, HOST, PORT):
 # This section is a bit dumb, but we only have
 # two weather stations, so it's easy and readable.
 def receive_from_ws1():
-    receive(shared.feed1, HOST_WS1, PORT_WS1)
+    receive(s.feed1, HOST_WS1, PORT_WS1)
 
 def receive_from_ws2():
-    receive(shared.feed2, HOST_WS2, PORT_WS2)
+    receive(s.feed2, HOST_WS2, PORT_WS2)
 

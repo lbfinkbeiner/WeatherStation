@@ -21,7 +21,7 @@ from matplotlib.backends.backend_tkagg import (
         FigureCanvasTkAgg, NavigationToolbar2Tk)
 from matplotlib.figure import Figure
 
-import shared
+import shared as s
 
 LARGEFONT =("Verdana", 35)
 
@@ -126,7 +126,7 @@ class WS1(tk.Frame):
         command = lambda : controller.show_frame(Graphs))
         button_graphs.grid(row = 4, column = 1, padx = 10, pady = 10)
   
-        shared.feed1["primary_soul"] = update
+        s.feed1["primary_soul"] = update
   
 class WS2(tk.Frame):
      
@@ -158,7 +158,7 @@ class WS2(tk.Frame):
         command = lambda : controller.show_frame(Graphs))
         button_graphs.grid(row = 4, column = 1, padx = 10, pady = 10)
         
-        shared.feed2["primary_soul"] = update
+        s.feed2["primary_soul"] = update
   
 # This frame shows the discrepancies between
 # the readings of the two weather stations.
@@ -195,7 +195,7 @@ class Deltas(tk.Frame):
         command = lambda : controller.show_frame(Graphs))
         button_graphs.grid(row = 4, column = 1, padx = 10, pady = 10)
         
-        shared.diff_soul = update
+        s.diff_soul = update
         
 class Comms(tk.Frame):
     
@@ -209,8 +209,8 @@ class Comms(tk.Frame):
         def dump():
             f1 = open('WS1.csv', 'w')
             f2 = open('WS2.csv', 'w')
-            shared.df1.to_csv(f1, na_rep='NaN', header=True, index=True, line_terminator="\n")
-            shared.df2.to_csv(f2, na_rep='NaN', header=True, index=True, line_terminator="\n")
+            s.df1.to_csv(f1, na_rep='NaN', header=True, index=True, line_terminator="\n")
+            s.df2.to_csv(f2, na_rep='NaN', header=True, index=True, line_terminator="\n")
 
         tk.Frame.__init__(self, parent)
         
@@ -248,14 +248,14 @@ class Comms(tk.Frame):
         button_dump = ttk.Button(self, text = "Dump", command=dump)
         button_dump.grid(row = 5, column = 1, padx = 10, pady = 10)
 
-        shared.feed1["comm_soul"] = update_WS1
-        shared.feed2["comm_soul"] = update_WS2
+        s.feed1["comm_soul"] = update_WS1
+        s.feed2["comm_soul"] = update_WS2
         
 class Graphs(tk.Frame):
     def __init__(self, parent, controller):
         def update():
-            x = shared.graph_data["Ta"]["x"]
-            y = shared.graph_data["Ta"]["y"]
+            x = s.graph_data["Ta"]["x"]
+            y = s.graph_data["Ta"]["y"]
             line1.set_xdata(x)
             line1.set_ydata(y)
             #line1.set_ydata(new_data)
@@ -329,7 +329,7 @@ class Graphs(tk.Frame):
 
         #canvas.get_tk_widget().pack(
         #        side=tk.TOP, fill=tk.BOTH, expand=1)
-        shared.graph_soul = update
+        s.graph_soul = update
 
 def start():
     app = Weather_Interface()
