@@ -10,6 +10,7 @@ import threading
 import numpy as np, pandas as pd
 import shared
 import feed_interpreter, telnet_receiver, weather_gui
+
 def main():
     # the thread numbering is entirely arbitrary
     t0 = threading.Thread(

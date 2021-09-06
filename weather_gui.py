@@ -205,7 +205,13 @@ class Comms(tk.Frame):
         
         def update_WS2(new_text):
             WS2_details.config(text = new_text)
-            
+
+        def dump():
+            f1 = open('WS1.csv', 'w')
+            f2 = open('WS2.csv', 'w')
+            shared.df1.to_csv(f1, na_rep='NaN', header=True, index=True, line_terminator="\n")
+            shared.df2.to_csv(f2, na_rep='NaN', header=True, index=True, line_terminator="\n")
+
         tk.Frame.__init__(self, parent)
         
         title = ttk.Label(self, text = "Communications", font = LARGEFONT)
@@ -238,7 +244,10 @@ class Comms(tk.Frame):
         button_graphs = ttk.Button(self, text = "Graphs",
         command = lambda : controller.show_frame(Graphs))
         button_graphs.grid(row = 4, column = 1, padx = 10, pady = 10)
-        
+
+        button_dump = ttk.Button(self, text = "Dump", command=dump)
+        button_dump.grid(row = 5, column = 1, padx = 10, pady = 10)
+
         shared.full_feed["feed1"]["comm_soul"] = update_WS1
         shared.full_feed["feed2"]["comm_soul"] = update_WS2
         
