@@ -98,7 +98,7 @@ import traceback
 
 # Now back to semi-legitimate programming
 
-def listen(full_feed):
+def listen(full_feed, df1, df2):
     var_vals1 = {}
     var_vals2 = {}
     for var in var_abbrs.keys():

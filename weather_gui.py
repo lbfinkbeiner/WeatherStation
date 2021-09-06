@@ -70,6 +70,9 @@ yap = {
     "Vr": 1.5
 }
 
+df1 = None
+df2 = None
+
 class Weather_Interface(tk.Tk):
      
     def __init__(self, *args, **kwargs):
@@ -322,10 +325,15 @@ class Graphs(tk.Frame):
         #        side=tk.TOP, fill=tk.BOTH, expand=1)
         feed["graph_soul"] = update
 
-def start(input_feed):
+def start(input_feed, input_df1, input_df2):
     global feed
     feed = input_feed
+    global df1
+    df1 = input_df1
+    global dt2
+    df2 = input_df2
     
+
     app = Weather_Interface()
     app.mainloop()
     

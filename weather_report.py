@@ -8,7 +8,7 @@
 
 import threading
 import feed_interpreter, telnet_receiver, weather_gui
-import numpy as np
+import numpy as np, pandas as pd
 
 """
 'soul' is just jargon I made up to describe a function
@@ -34,7 +34,32 @@ full_feed = {
     }
 }
 
-dt = None
+var_abbrs = [
+    "Dn",
+    "Dm",
+    "Dx",
+    "Sn",
+    "Sm",
+    "Sx",
+    "Ta",
+    "Ua",
+    "Pa",
+    "Rc",
+    "Rd",
+    "Ri",
+    "Hc",
+    "Hd",
+    "Hi",
+    "Rp",
+    "Hp",
+    "Th",
+    "Vh",
+    "Vs",
+    "Vr"
+]
+
+df1 = pd.DataFrame(columns=var_abbrs)
+df2 = pd.DataFrame(columns=var_abbrs)
 
 def main():
     # the thread numbering is entirely arbitrary
@@ -52,13 +77,13 @@ def main():
     
     t2 = threading.Thread(
         target=feed_interpreter.listen,
-        args=(full_feed, dt,)
+        args=(full_feed, df1, df2,)
     )
     t2.start()
     
     t3 = threading.Thread(
         target=weather_gui.start,
-        args=(full_feed, dt,)
+        args=(full_feed, df1, df2,)
     )
     t3.start()
 
