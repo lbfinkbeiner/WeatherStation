@@ -86,9 +86,9 @@ var_roles = {
     "Hi": Role.ignore,
     "Rp": Role.ignore,
     "Hp": Role.ignore,
-    "Th": Role.ignore, #! double check this one, could go in comms
+    "Th": Role.ignore, #! double check this one; could go in comms
     "Vh": Role.comms,
     "Vs": Role.comms,
-    "Vr": Role.ignore #! double check this one, could go in comms
+    "Vr": Role.ignore #! double check this one; could go in comms
 }
 

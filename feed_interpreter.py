@@ -38,7 +38,7 @@ def listen(full_feed, df1, df2):
             sys.exit()
 
 def handle(feed, var_vals, df):
-    print(df)
+    # print(df)
 
     feed["updated"] = False
     parse(feed["raw"], var_vals, df)
@@ -84,13 +84,13 @@ def parse(line, var_vals, df):
         next_var = line[:comma_i]
         sides = next_var.split("=")
         var_name = sides[0]
-
-        float_pattern = r"\d+(\.\d+)?"
-        var_val = re.search(float_pattern, sides[1]).group(0)
-
-        df.at[final_row_index, var_name] = var_val
-
-        var_vals[var_name] = float(var_val)
+        if shared.var_roles[var_name] is not shared.Role.ignore:
+            float_pattern = r"\d+(\.\d+)?"
+            var_val = re.search(float_pattern, sides[1]).group(0)
+    
+            df.at[final_row_index, var_name] = var_val
+    
+            var_vals[var_name] = float(var_val)
 
         line = line[(comma_i + 1):]
         comma_i = line.find(",")

@@ -35,8 +35,11 @@ full_feed = {
     }
 }
 
-df_columns = [var for var in shared.var_roles.keys() \
-        if shared.var_roles[var] is not shared.Role.ignore]
+df_columns = []
+for var in shared.var_roles.keys():
+    # print(var, shared.var_roles[var])
+    if shared.var_roles[var] is not shared.Role.ignore:
+        df_columns.append(var)
 
 df1 = pd.DataFrame(columns=df_columns)
 df2 = pd.DataFrame(columns=df_columns)
@@ -68,3 +71,4 @@ def main():
     t3.start()
 
 main()
+

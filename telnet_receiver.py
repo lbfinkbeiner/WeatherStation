@@ -15,6 +15,7 @@ PORT_ws2 = 4001
 from telnetlib import Telnet
 import re
 
+# This pattern indicates the end of a full transmission (one full set of variable values)
 batch_terminator = "Vr=\d+\.\d+V"
 
 def receive(feed, HOST, PORT):
