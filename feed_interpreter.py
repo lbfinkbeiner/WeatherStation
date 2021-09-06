@@ -7,7 +7,6 @@
 """
 
 import re, os, sys
-import time as t
 import numpy as np
 import shared
 # garbage import
@@ -15,21 +14,15 @@ import traceback
 
 # Now back to semi-legitimate programming
 
-def listen(full_feed, df1, df2):
-    var_vals1 = {}
-    var_vals2 = {}
-    for var in shared.var_abbrs.keys():
-        var_vals1[var] = None
-        var_vals2[var] = None
-       
+def listen():
     while True:
         try:
-            if full_feed["feed1"]["updated"]:
-                handle(full_feed["feed1"], var_vals1, df1)
-                post_diffs(full_feed, var_vals1, var_vals2)
-            if full_feed["feed2"]["updated"]:
-                handle(full_feed["feed2"], var_vals2, df2)
-                post_diffs(full_feed, var_vals1, var_vals2)
+            if shared.full_feed["feed1"]["updated"]:
+                handle(shared.full_feed["feed1"], shared.df1)
+                post_diffs()
+            if shared.full_feed["feed2"]["updated"]:
+                handle(shared.full_feed["feed2"], shared.df2)
+                post_diffs()
  
         except Exception as e:
             print(e)
@@ -37,11 +30,11 @@ def listen(full_feed, df1, df2):
             print("TKInter probably died. Please try again.")
             sys.exit()
 
-def handle(feed, var_vals, df):
+def handle(feed, df):
     # print(df)
 
     feed["updated"] = False
-    parse(feed["raw"], var_vals, df)
+    parse(feed, df)
     primary_styled = ""
     comm_styled = ""
 
@@ -51,7 +44,8 @@ def handle(feed, var_vals, df):
         
         styled_line = shared.var_abbrs[var]
         styled_line += ": "
-        styled_line += str(var_vals[var])
+        # we do not need to worry about this being None, because "updated" was marked True
+        styled_line += str(df.loc[feed["latest_index"], var])
         styled_line += shared.default_units[var]
         styled_line += "\n"
         
@@ -66,13 +60,14 @@ def handle(feed, var_vals, df):
     if feed["comm_soul"] is not None:
         feed["comm_soul"](comm_styled)
 
-def parse(line, var_vals, df): 
+def parse(feed, df): 
     # This approach (recreating the data frame every time
     # we want to add a row) may prove computationally
     # infeasible for the Pi by the end of the day
+    line = feed["raw"]
+
     preexisting_times = list(df.index)
-    final_row_index = t.time()
-    new_index = preexisting_times + [final_row_index]
+    new_index = preexisting_times + [feed["latest_index"]]
     df.reindex(new_index)
 
     # Every line starts with a group ID about which we don't care
@@ -88,7 +83,7 @@ def parse(line, var_vals, df):
             float_pattern = r"\d+(\.\d+)?"
             var_val = re.search(float_pattern, sides[1]).group(0)
     
-            df.at[final_row_index, var_name] = var_val
+            df.at[feed["latest_index"], var_name] = var_val
     
             var_vals[var_name] = float(var_val)
 
@@ -119,31 +114,35 @@ def parse(line, var_vals, df):
     except ValueError:
         print("Could not convert the following string to float:", var_val)
     
-def post_diffs(full_feed, var_vals1, var_vals2):
+def post_diffs():
     styled = ""
         
     for var in shared.var_abbrs.keys():
         if shared.var_roles[var] is not shared.Role.ignore:
-            
-            if var_vals2[var] is None or var_vals1[var] is None:
+            val2 = shared.dt2.loc[shared.feed2["latest_index"], var]
+            val1 = shared.dt1.loc[shared.feed1["latest_index"], var]
+
+            if val2 is None or val1 is None:
                 return
-            
+            if val2 is np.nan or val1 is np.nan:
+                return
+
             # for demo purposes, we are hard-coding a data len cap of 10
             if var == "Ta":
-                gd = full_feed["graph_data"]["Ta"]
+                gd = shared.full_feed["graph_data"]["Ta"]
                 if gd["x"] is None:
                     gd["x"] = np.array([0])
-                    gd["y"] = np.array([var_vals1[var]])
+                    gd["y"] = np.array(val1)
                 elif gd["x"].size == 10:
                     gd["x"] = np.roll(gd["x"], -1)
                     gd["y"] = np.roll(gd["y"], -1)
                     gd["x"][9] = gd["x"][8] + 1
-                    gd["y"][9] = var_vals1[var]
+                    gd["y"][9] = val1
                 else:
                     last_i = gd["x"].size - 1
                     last_x = gd["x"][last_i]
                     x_element = np.array([last_x + 1])
-                    y_element = np.array([var_vals1[var]])
+                    y_element = np.array([val1])
                     gd["x"] = np.append(gd["x"], x_element)
                     gd["y"] = np.append(gd["y"], y_element)
                  
@@ -151,9 +150,10 @@ def post_diffs(full_feed, var_vals1, var_vals2):
 
             styled += shared.var_abbrs[var]
             styled += ": "
-            styled += str(np.around(var_vals2[var] - var_vals1[var], 4))
+            styled += str(np.around(val2 - val1, 4))
             styled += shared.default_units[var]
             styled += "\n"
     
     if full_feed["diff_soul"] is not None:
         full_feed["diff_soul"](styled)
+

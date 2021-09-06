@@ -21,9 +21,9 @@ from matplotlib.backends.backend_tkagg import (
         FigureCanvasTkAgg, NavigationToolbar2Tk)
 from matplotlib.figure import Figure
 
-LARGEFONT =("Verdana", 35)
+import shared
 
-feed = None
+LARGEFONT =("Verdana", 35)
 
 waiting = "waiting for data...\n" + \
           "this can typically take up to twenty seconds"
@@ -69,9 +69,6 @@ yap = {
     "Vs": 1.5,
     "Vr": 1.5
 }
-
-df1 = None
-df2 = None
 
 class Weather_Interface(tk.Tk):
      
@@ -129,7 +126,7 @@ class WS1(tk.Frame):
         command = lambda : controller.show_frame(Graphs))
         button_graphs.grid(row = 4, column = 1, padx = 10, pady = 10)
   
-        feed["feed1"]["primary_soul"] = update
+        shared.full_feed["feed1"]["primary_soul"] = update
   
 class WS2(tk.Frame):
      
@@ -161,7 +158,7 @@ class WS2(tk.Frame):
         command = lambda : controller.show_frame(Graphs))
         button_graphs.grid(row = 4, column = 1, padx = 10, pady = 10)
         
-        feed["feed2"]["primary_soul"] = update
+        shared.full_feed["feed2"]["primary_soul"] = update
   
 # This frame shows the discrepancies between
 # the readings of the two weather stations.
@@ -198,7 +195,7 @@ class Deltas(tk.Frame):
         command = lambda : controller.show_frame(Graphs))
         button_graphs.grid(row = 4, column = 1, padx = 10, pady = 10)
         
-        feed["diff_soul"] = update
+        shared.full_feed["diff_soul"] = update
         
 class Comms(tk.Frame):
     
@@ -242,14 +239,14 @@ class Comms(tk.Frame):
         command = lambda : controller.show_frame(Graphs))
         button_graphs.grid(row = 4, column = 1, padx = 10, pady = 10)
         
-        feed["feed1"]["comm_soul"] = update_WS1
-        feed["feed2"]["comm_soul"] = update_WS2
+        shared.full_feed["feed1"]["comm_soul"] = update_WS1
+        shared.full_feed["feed2"]["comm_soul"] = update_WS2
         
 class Graphs(tk.Frame):
     def __init__(self, parent, controller):
         def update():
-            x = feed["graph_data"]["Ta"]["x"]
-            y = feed["graph_data"]["Ta"]["y"]
+            x = shared.full_feed["graph_data"]["Ta"]["x"]
+            y = shared.full_feed["graph_data"]["Ta"]["y"]
             line1.set_xdata(x)
             line1.set_ydata(y)
             #line1.set_ydata(new_data)
@@ -323,17 +320,9 @@ class Graphs(tk.Frame):
 
         #canvas.get_tk_widget().pack(
         #        side=tk.TOP, fill=tk.BOTH, expand=1)
-        feed["graph_soul"] = update
+        shared.full_feed["graph_soul"] = update
 
-def start(input_feed, input_df1, input_df2):
-    global feed
-    feed = input_feed
-    global df1
-    df1 = input_df1
-    global dt2
-    df2 = input_df2
-    
-
+def start():
     app = Weather_Interface()
     app.mainloop()
     
@@ -342,3 +331,4 @@ We want 440 x 280, but
 it automatically resizes;
 I suppose we can work with that.
 """
+

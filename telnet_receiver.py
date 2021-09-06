@@ -14,6 +14,8 @@ PORT_ws2 = 4001
 
 from telnetlib import Telnet
 import re
+import time as t
+import shared
 
 # This pattern indicates the end of a full transmission (one full set of variable values)
 batch_terminator = "Vr=\d+\.\d+V"
@@ -38,6 +40,7 @@ def receive(feed, HOST, PORT):
 
                     feed["raw"] = latest[:terminator_end_i]
                     # publish the change
+                    feed["latest_index"] = t.time()
                     feed["updated"] = True
                     latest = ""
             except UnicodeDecodeError:
@@ -47,8 +50,9 @@ def receive(feed, HOST, PORT):
 
 # This section is a bit dumb, but we only have
 # two weather stations, so it's easy and readable.
-def receive_from_ws1(feed):
-    receive(feed, HOST_ws1, PORT_ws1)
+def receive_from_ws1():
+    receive(shared.full_feed["feed1"], HOST_ws1, PORT_ws1)
 
-def receive_from_ws2(feed):
-    receive(feed, HOST_ws2, PORT_ws2)
+def receive_from_ws2():
+    receive(shared.full_feed["feed2"], HOST_ws2, PORT_ws2)
+

@@ -7,6 +7,7 @@
 """
 
 import enum
+import pandas as pd
 
 class Role(enum.Enum):
     ignore = 0
@@ -91,4 +92,36 @@ var_roles = {
     "Vs": Role.comms,
     "Vr": Role.ignore #! double check this one; could go in comms
 }
+
+"""
+'soul' is just jargon I made up to describe a function
+that updates a specific label on the GUI. Without
+this strange work-around those functions are
+entirely internal and difficult to see from here.
+"""
+feed1 = {"raw": "", "updated": False,
+         "primary_soul": None, "comm_soul": None,
+         "latest_index": None}
+feed2 = {"raw": "", "updated": False,
+         "primary_soul": None, "comm_soul": None,
+         "latest_index": None}
+
+full_feed = {
+    "feed1": feed1,
+    "feed2": feed2,
+    "diff_soul": None,
+    "graph_soul": None,
+    "graph_data": {
+        "Ta": {
+            "x": None,
+            "y": None
+        }
+    }
+}
+
+df_columns = [var for var in var_roles.keys() \
+        if var_roles[var] is not Role.ignore]
+
+df1 = pd.DataFrame(columns=df_columns)
+df2 = pd.DataFrame(columns=df_columns)
 

@@ -1,3 +1,8 @@
+In what format would Alex like the times to be displayed?
+	For now, I will assume I can do HH:mm:ss,
+	although that will make plots quite difficult to read,
+	because it is so long
+
 CSV interface idea:
 * We should have a hard-coded "vertical padding" dictionary
 	for our graphs. Depending on what we consider reasonable
