@@ -7,8 +7,9 @@
 """
 
 import threading
-import feed_interpreter, telnet_receiver, weather_gui
 import numpy as np, pandas as pd
+import shared
+import feed_interpreter, telnet_receiver, weather_gui
 
 """
 'soul' is just jargon I made up to describe a function
@@ -34,34 +35,11 @@ full_feed = {
     }
 }
 
-var_abbrs = [
-    "Dn",
-    "Dm",
-    "Dx",
-    "Sn",
-    "Sm",
-    "Sx",
-    "Ta",
-    "Ua",
-    "Pa",
-    "Rc",
-    "Rd",
-    "Ri",
-    "Hc",
-    "Hd",
-    "Hi",
-    "Rp",
-    "Hp",
-    "Th",
-    "Vh",
-    "Vs",
-    "Vr"
-]
+df_columns = [var for var in shared.var_roles.keys() \
+        if shared.var_roles[var] is not shared.Role.ignore]
 
-df_columns = 
-
-df1 = pd.DataFrame(columns=var_abbrs)
-df2 = pd.DataFrame(columns=var_abbrs)
+df1 = pd.DataFrame(columns=df_columns)
+df2 = pd.DataFrame(columns=df_columns)
 
 def main():
     # the thread numbering is entirely arbitrary

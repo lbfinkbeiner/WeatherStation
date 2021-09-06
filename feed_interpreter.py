@@ -6,14 +6,10 @@
     Python version: 3.7.3
 """
 
-import re, os, enum, sys
+import re, os, sys
 import time as t
 import numpy as np
-
-class Role(enum.Enum):
-    ignore = 0
-    primary = 1
-    comms = 2
+import shared
 # garbage import
 import traceback
 
@@ -22,7 +18,7 @@ import traceback
 def listen(full_feed, df1, df2):
     var_vals1 = {}
     var_vals2 = {}
-    for var in var_abbrs.keys():
+    for var in shared.var_abbrs.keys():
         var_vals1[var] = None
         var_vals2[var] = None
        
@@ -49,19 +45,19 @@ def handle(feed, var_vals, df):
     primary_styled = ""
     comm_styled = ""
 
-    for var in var_abbrs.keys():
-        if var_roles[var] is Role.ignore:
+    for var in shared.var_abbrs.keys():
+        if shared.var_roles[var] is shared.Role.ignore:
             continue
         
-        styled_line = var_abbrs[var]
+        styled_line = shared.var_abbrs[var]
         styled_line += ": "
         styled_line += str(var_vals[var])
-        styled_line += default_units[var]
+        styled_line += shared.default_units[var]
         styled_line += "\n"
         
-        if var_roles[var] is Role.primary:
+        if shared.var_roles[var] is shared.Role.primary:
             primary_styled += styled_line
-        elif var_roles[var] is Role.comms:
+        elif shared.var_roles[var] is shared.Role.comms:
             comm_styled += styled_line
     
     if feed["primary_soul"] is not None:
@@ -126,8 +122,8 @@ def parse(line, var_vals, df):
 def post_diffs(full_feed, var_vals1, var_vals2):
     styled = ""
         
-    for var in var_abbrs.keys():
-        if var_roles[var] is not Role.ignore:
+    for var in shared.var_abbrs.keys():
+        if shared.var_roles[var] is not shared.Role.ignore:
             
             if var_vals2[var] is None or var_vals1[var] is None:
                 return
@@ -153,10 +149,10 @@ def post_diffs(full_feed, var_vals1, var_vals2):
                  
                 full_feed["graph_soul"]()
 
-            styled += var_abbrs[var]
+            styled += shared.var_abbrs[var]
             styled += ": "
             styled += str(np.around(var_vals2[var] - var_vals1[var], 4))
-            styled += default_units[var]
+            styled += shared.default_units[var]
             styled += "\n"
     
     if full_feed["diff_soul"] is not None:

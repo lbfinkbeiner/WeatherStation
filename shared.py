@@ -6,6 +6,13 @@
     Python version: 3.7.3
 """
 
+import enum
+
+class Role(enum.Enum):
+    ignore = 0
+    primary = 1
+    comms = 2
+
 """
 Brace yourself for hard-code city:
 the first two dictionaries come from
