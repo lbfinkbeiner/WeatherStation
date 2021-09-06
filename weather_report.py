@@ -32,7 +32,5 @@ def main():
     )
     t3.start()
 
-    print("We did in fact reach the end of the main routine.")
-
 main()
 

@@ -153,3 +153,5 @@ df2 = pd.DataFrame(columns=df_columns)
 
 last_autosave = t.time()
 
+shutting_down = False
+

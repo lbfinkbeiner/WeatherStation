@@ -23,7 +23,7 @@ batch_terminator = "Vr=\d+\.\d+V"
 def receive(feed, HOST, PORT):
     with Telnet(HOST, PORT) as tn:
         latest = ""
-        while True:
+        while not s.shutting_down:
             next_byte = tn.read_eager()
             try:
                 next_char = next_byte.decode("ascii")

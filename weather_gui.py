@@ -25,7 +25,7 @@ import shared as s
 
 LARGEFONT =("Verdana", 35)
 
-waiting = "waiting for data...\n" + \
+WAITING = "Waiting for data...\n" + \
           "this can typically take up to twenty seconds"
 
 """
@@ -70,6 +70,10 @@ yap = {
     "Vr": 1.5
 }
 
+# This command will shut down the whole GUI.
+# It needs to be filled in when the thread is called.
+destroy = None
+
 class Weather_Interface(tk.Tk):
      
     def __init__(self, *args, **kwargs):
@@ -91,6 +95,8 @@ class Weather_Interface(tk.Tk):
             frame.grid(row = 0, column = 0, sticky ="nsew")
   
         self.show_frame(WS1)
+
+        #self.destroy()
   
     def show_frame(self, cont):
         frame = self.frames[cont]
@@ -101,31 +107,40 @@ class WS1(tk.Frame):
     def __init__(self, parent, controller):
         def update(new_text):
             WS1_details.config(text = new_text)
-        
+       
+        def close_tool():
+            s.shutting_down = True
+            global destroy
+            destroy()
+
         tk.Frame.__init__(self, parent)
         
         title = ttk.Label(self, text = "Weather Station 1", font = LARGEFONT)
         title.grid(row = 0, column = 2, padx = 10, pady = 10)
         
-        WS1_details = ttk.Label(self, text = waiting)
+        WS1_details = ttk.Label(self, text = WAITING)
         WS1_details.grid(row = 2, column = 2)
   
         button_WS2 = ttk.Button(self, text = "WS2",
-        command = lambda : controller.show_frame(WS2))
+            command = lambda : controller.show_frame(WS2))
         button_WS2.grid(row = 1, column = 1, padx = 10, pady = 10)
   
         button_deltas = ttk.Button(self, text = "Deltas",
-        command = lambda : controller.show_frame(Deltas))
+            command = lambda : controller.show_frame(Deltas))
         button_deltas.grid(row = 2, column = 1, padx = 10, pady = 10)
   
         button_comms = ttk.Button(self, text = "Comm.s",
-        command = lambda : controller.show_frame(Comms))
+            command = lambda : controller.show_frame(Comms))
         button_comms.grid(row = 3, column = 1, padx = 10, pady = 10)
         
         button_graphs = ttk.Button(self, text = "Graphs",
-        command = lambda : controller.show_frame(Graphs))
+            command = lambda : controller.show_frame(Graphs))
         button_graphs.grid(row = 4, column = 1, padx = 10, pady = 10)
-  
+ 
+        button_quit = ttk.Button(self, text = "Quit",
+                command = close_tool)
+        button_quit.grid(row = 5, column = 1, padx = 10, pady = 10)
+
         s.feed1["primary_soul"] = update
   
 class WS2(tk.Frame):
@@ -139,7 +154,7 @@ class WS2(tk.Frame):
         title = ttk.Label(self, text = "Weather Station 2", font = LARGEFONT)
         title.grid(row = 0, column = 2, padx = 10, pady = 10)
   
-        WS2_details = ttk.Label(self, text = waiting)
+        WS2_details = ttk.Label(self, text = WAITING)
         WS2_details.grid(row = 2, column = 2)
   
         button_WS1 = ttk.Button(self, text = "WS1",
@@ -151,11 +166,11 @@ class WS2(tk.Frame):
         button_deltas.grid(row = 2, column = 1, padx = 10, pady = 10)
         
         button_comms = ttk.Button(self, text = "Comm.s",
-        command = lambda : controller.show_frame(Comms))
+            command = lambda : controller.show_frame(Comms))
         button_comms.grid(row = 3, column = 1, padx = 10, pady = 10)
         
         button_graphs = ttk.Button(self, text = "Graphs",
-        command = lambda : controller.show_frame(Graphs))
+            command = lambda : controller.show_frame(Graphs))
         button_graphs.grid(row = 4, column = 1, padx = 10, pady = 10)
         
         s.feed2["primary_soul"] = update
@@ -176,7 +191,7 @@ class Deltas(tk.Frame):
         note = ttk.Label(self, text = "WS2 readings minus WS1 readings")
         note.grid(row = 1, column = 2)
         
-        diff_details = ttk.Label(self, text = waiting)
+        diff_details = ttk.Label(self, text = WAITING)
         diff_details.grid(row = 2, column = 2)
   
         button_WS1 = ttk.Button(self, text = "WS1",
@@ -188,11 +203,11 @@ class Deltas(tk.Frame):
         button_WS2.grid(row = 2, column = 1, padx = 10, pady = 10)
         
         button_comms = ttk.Button(self, text = "Comm.s",
-        command = lambda : controller.show_frame(Comms))
+            command = lambda : controller.show_frame(Comms))
         button_comms.grid(row = 3, column = 1, padx = 10, pady = 10)
         
         button_graphs = ttk.Button(self, text = "Graphs",
-        command = lambda : controller.show_frame(Graphs))
+            command = lambda : controller.show_frame(Graphs))
         button_graphs.grid(row = 4, column = 1, padx = 10, pady = 10)
         
         s.diff_soul = update
@@ -214,7 +229,7 @@ class Comms(tk.Frame):
         WS1_title = ttk.Label(self, text = "Weather Station 1")
         WS1_title.grid(row = 1, column = 2)
         
-        WS1_details = ttk.Label(self, text = waiting)
+        WS1_details = ttk.Label(self, text = WAITING)
         WS1_details.grid(row = 2, column = 2)
   
         button_WS1 = ttk.Button(self, text = "WS1",
@@ -224,7 +239,7 @@ class Comms(tk.Frame):
         WS1_title = ttk.Label(self, text = "Weather Station 2")
         WS1_title.grid(row = 3, column = 2)
         
-        WS2_details = ttk.Label(self, text = waiting)
+        WS2_details = ttk.Label(self, text = WAITING)
         WS2_details.grid(row = 4, column = 2)
         
         button_WS2 = ttk.Button(self, text ="WS2",
@@ -236,7 +251,7 @@ class Comms(tk.Frame):
         button_deltas.grid(row = 3, column = 1, padx = 10, pady = 10)
         
         button_graphs = ttk.Button(self, text = "Graphs",
-        command = lambda : controller.show_frame(Graphs))
+            command = lambda : controller.show_frame(Graphs))
         button_graphs.grid(row = 4, column = 1, padx = 10, pady = 10)
 
         button_dump = ttk.Button(self, text = "Dump", command=s.save_to_disk)
@@ -305,7 +320,7 @@ class Graphs(tk.Frame):
         button_deltas.grid(row = 3, column = 1, padx = 10, pady = 10)
         
         button_comms = ttk.Button(self, text = "Comm.s",
-        command = lambda : controller.show_frame(Comms))
+            command = lambda : controller.show_frame(Comms))
         button_comms.grid(row = 4, column = 1, padx = 10, pady = 10)
 
         # Here are some matplotlib tests
@@ -327,6 +342,8 @@ class Graphs(tk.Frame):
 
 def start():
     app = Weather_Interface()
+    global destroy
+    destroy = app.destroy
     app.mainloop()
     
 """

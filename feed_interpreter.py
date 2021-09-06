@@ -14,7 +14,7 @@ import shared as s
 import traceback
 
 def listen():
-    while True:
+    while not s.shutting_down:
         try:
             if s.feed1["updated"]:
                 handle(s.feed1, s.df1)
