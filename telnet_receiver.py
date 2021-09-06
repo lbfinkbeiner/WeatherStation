@@ -2,7 +2,7 @@
     File name: telnet_receiver.py
     Author: Lukas Finkbeiner
     Date created: 8/30/2021
-    Date last modified: 9/2/2021
+    Date last modified: 9/5/2021
     Python version: 3.7.3
 """
 

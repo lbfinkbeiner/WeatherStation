@@ -2,7 +2,7 @@
     File name: weather_report.py
     Author: Lukas Finkbeiner
     Date created: 8/30/2021
-    Date last modified: 9/3/2021
+    Date last modified: 9/5/2021
     Python version: 3.7.3
 """
 
@@ -57,6 +57,8 @@ var_abbrs = [
     "Vs",
     "Vr"
 ]
+
+df_columns = 
 
 df1 = pd.DataFrame(columns=var_abbrs)
 df2 = pd.DataFrame(columns=var_abbrs)
