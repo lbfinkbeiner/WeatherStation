@@ -1,3 +1,41 @@
+Current to-do's, roughly in order of priority:
+	* We need to add a quit button. We need to figure out
+		how to even allow the user to quit gracefully.
+	? We need to add a logging system which checks whether
+		the program quit gracefully (does that even
+		matter? How would that affect the way
+		that we launch??)
+	* The auto-save feature should include a special
+		if statement to see if the day has ended,
+		in which case it wipes the data
+		tables and starts a new day.
+	* We need to add a launcher which will check whether
+		we need to start a new file for a new day
+		or try to resume an old one. Resuming
+		will require it's own fair deal of code.
+	* We need to redo the GUI grid layout.
+		1. The buttons look terrible. I think that they
+			should run along the bottom instead of
+			the side.
+		2. We need to fix alignment issues.
+			When the visual length of the wind
+			direction average changes, the entire
+			text box moves around and that is completely
+			unacceptable.
+		3. The title is way too large and the text
+			should probably be thicker.
+	* Can we figure out how to get the GUI to automatically
+		re-size to fill the screen? This will be necessary
+		since the Pi already has an incredibly tiny touch screen.
+			* Additionally, maybe we can take a look at
+				hiding the Pi's task bar and the GUI's
+				menu bar? Diminishing returns;
+				we'll have to play around and see whether
+				it's worth it.
+	* I find the white background to be an incredibly eye sore.
+		However, Alex may actually prefer the black and
+		the white because it is sharper in all light conditions.
+
 In what format would Alex like the times to be displayed?
 	For now, I will assume I can do HH:mm:ss,
 	although that will make plots quite difficult to read,
