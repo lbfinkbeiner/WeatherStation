@@ -83,10 +83,8 @@ def parse(feed, df):
             float_pattern = r"\d+(\.\d+)?"
             var_val = re.search(float_pattern, sides[1]).group(0)
     
-            df.at[feed["latest_index"], var_name] = var_val
+            df.at[feed["latest_index"], var_name] = float(var_val)
     
-            var_vals[var_name] = float(var_val)
-
         line = line[(comma_i + 1):]
         comma_i = line.find(",")
 
@@ -110,7 +108,7 @@ def parse(feed, df):
     var_val = line[:non_float_start_i]
 
     try:
-        var_vals[var_name] = float(var_val)
+        df.at[feed["latest_index"], var_name] = float(var_val)
     except ValueError:
         print("Could not convert the following string to float:", var_val)
     
@@ -119,8 +117,11 @@ def post_diffs():
         
     for var in shared.var_abbrs.keys():
         if shared.var_roles[var] is not shared.Role.ignore:
-            val2 = shared.dt2.loc[shared.feed2["latest_index"], var]
-            val1 = shared.dt1.loc[shared.feed1["latest_index"], var]
+            try:
+                val2 = shared.df2.loc[shared.feed2["latest_index"], var]
+                val1 = shared.df1.loc[shared.feed1["latest_index"], var]
+            except KeyError:
+                return # not enough values yet to post differences
 
             if val2 is None or val1 is None:
                 return
@@ -146,7 +147,7 @@ def post_diffs():
                     gd["x"] = np.append(gd["x"], x_element)
                     gd["y"] = np.append(gd["y"], y_element)
                  
-                full_feed["graph_soul"]()
+                shared.full_feed["graph_soul"]()
 
             styled += shared.var_abbrs[var]
             styled += ": "
@@ -154,6 +155,6 @@ def post_diffs():
             styled += shared.default_units[var]
             styled += "\n"
     
-    if full_feed["diff_soul"] is not None:
-        full_feed["diff_soul"](styled)
+    if shared.full_feed["diff_soul"] is not None:
+        shared.full_feed["diff_soul"](styled)
 
