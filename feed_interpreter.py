@@ -7,12 +7,11 @@
 """
 
 import re, os, sys
+import time as t
 import numpy as np
 import shared as s
 # garbage import
 import traceback
-
-# Now back to semi-legitimate programming
 
 def listen():
     while True:
@@ -23,6 +22,11 @@ def listen():
             if s.feed2["updated"]:
                 handle(s.feed2, s.df2)
                 post_diffs()
+
+            now = t.time()
+            if now - s.last_autosave >= s.AUTOSAVE_INTERVAL:
+                s.last_autosave = now
+                s.save_to_disk()
  
         except Exception as e:
             print(e)
@@ -31,8 +35,6 @@ def listen():
             sys.exit()
 
 def handle(feed, df):
-    # print(df)
-
     feed["updated"] = False
     parse(feed, df)
     primary_styled = ""

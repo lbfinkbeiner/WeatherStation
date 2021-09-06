@@ -28,8 +28,6 @@ def receive(feed, HOST, PORT):
             try:
                 next_char = next_byte.decode("ascii")
                 
-                # we need to figure out how to send all batches at once
-
                 latest += next_char
                 terminator_match = re.search(batch_terminator, latest)
 
