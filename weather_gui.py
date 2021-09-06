@@ -126,7 +126,7 @@ class WS1(tk.Frame):
         command = lambda : controller.show_frame(Graphs))
         button_graphs.grid(row = 4, column = 1, padx = 10, pady = 10)
   
-        shared.full_feed["feed1"]["primary_soul"] = update
+        shared.feed1["primary_soul"] = update
   
 class WS2(tk.Frame):
      
@@ -158,7 +158,7 @@ class WS2(tk.Frame):
         command = lambda : controller.show_frame(Graphs))
         button_graphs.grid(row = 4, column = 1, padx = 10, pady = 10)
         
-        shared.full_feed["feed2"]["primary_soul"] = update
+        shared.feed2["primary_soul"] = update
   
 # This frame shows the discrepancies between
 # the readings of the two weather stations.
@@ -195,7 +195,7 @@ class Deltas(tk.Frame):
         command = lambda : controller.show_frame(Graphs))
         button_graphs.grid(row = 4, column = 1, padx = 10, pady = 10)
         
-        shared.full_feed["diff_soul"] = update
+        shared.diff_soul = update
         
 class Comms(tk.Frame):
     
@@ -248,14 +248,14 @@ class Comms(tk.Frame):
         button_dump = ttk.Button(self, text = "Dump", command=dump)
         button_dump.grid(row = 5, column = 1, padx = 10, pady = 10)
 
-        shared.full_feed["feed1"]["comm_soul"] = update_WS1
-        shared.full_feed["feed2"]["comm_soul"] = update_WS2
+        shared.feed1["comm_soul"] = update_WS1
+        shared.feed2["comm_soul"] = update_WS2
         
 class Graphs(tk.Frame):
     def __init__(self, parent, controller):
         def update():
-            x = shared.full_feed["graph_data"]["Ta"]["x"]
-            y = shared.full_feed["graph_data"]["Ta"]["y"]
+            x = shared.graph_data["Ta"]["x"]
+            y = shared.graph_data["Ta"]["y"]
             line1.set_xdata(x)
             line1.set_ydata(y)
             #line1.set_ydata(new_data)
@@ -329,7 +329,7 @@ class Graphs(tk.Frame):
 
         #canvas.get_tk_widget().pack(
         #        side=tk.TOP, fill=tk.BOTH, expand=1)
-        shared.full_feed["graph_soul"] = update
+        shared.graph_soul = update
 
 def start():
     app = Weather_Interface()

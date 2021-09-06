@@ -17,11 +17,11 @@ import traceback
 def listen():
     while True:
         try:
-            if shared.full_feed["feed1"]["updated"]:
-                handle(shared.full_feed["feed1"], shared.df1)
+            if shared.feed1["updated"]:
+                handle(shared.feed1, shared.df1)
                 post_diffs()
-            if shared.full_feed["feed2"]["updated"]:
-                handle(shared.full_feed["feed2"], shared.df2)
+            if shared.feed2["updated"]:
+                handle(shared.feed2, shared.df2)
                 post_diffs()
  
         except Exception as e:
@@ -130,7 +130,7 @@ def post_diffs():
 
             # for demo purposes, we are hard-coding a data len cap of 10
             if var == "Ta":
-                gd = shared.full_feed["graph_data"]["Ta"]
+                gd = shared.graph_data["Ta"]
                 if gd["x"] is None:
                     gd["x"] = np.array([0])
                     gd["y"] = np.array(val1)
@@ -147,7 +147,7 @@ def post_diffs():
                     gd["x"] = np.append(gd["x"], x_element)
                     gd["y"] = np.append(gd["y"], y_element)
                  
-                shared.full_feed["graph_soul"]()
+                shared.graph_soul()
 
             styled += shared.var_abbrs[var]
             styled += ": "
@@ -155,6 +155,6 @@ def post_diffs():
             styled += shared.default_units[var]
             styled += "\n"
     
-    if shared.full_feed["diff_soul"] is not None:
-        shared.full_feed["diff_soul"](styled)
+    if shared.diff_soul is not None:
+        shared.diff_soul(styled)
 

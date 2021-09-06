@@ -6,11 +6,11 @@
     Python version: 3.7.3
 """
 
-HOST_ws1 = 'weatherport-primary.hcro.org'
-PORT_ws1 = 4001
+HOST_WS1 = 'weatherport-primary.hcro.org'
+PORT_WS1 = 4001
 
-HOST_ws2 = 'weatherport-secondary.hcro.org'
-PORT_ws2 = 4001
+HOST_WS2 = 'weatherport-secondary.hcro.org'
+PORT_WS2 = 4001
 
 from telnetlib import Telnet
 import re
@@ -51,8 +51,8 @@ def receive(feed, HOST, PORT):
 # This section is a bit dumb, but we only have
 # two weather stations, so it's easy and readable.
 def receive_from_ws1():
-    receive(shared.full_feed["feed1"], HOST_ws1, PORT_ws1)
+    receive(shared.feed1, HOST_WS1, PORT_WS1)
 
 def receive_from_ws2():
-    receive(shared.full_feed["feed2"], HOST_ws2, PORT_ws2)
+    receive(shared.feed2, HOST_WS2, PORT_WS2)
 
