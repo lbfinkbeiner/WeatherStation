@@ -2,12 +2,11 @@
     File name: shared.py
     Author: Lukas Finkbeiner
     Date created: 9/5/2021
-    Date last modified: 9/6/2021
+    Date last modified: 9/7/2021
     Python version: 3.7.3
 """
 
 import enum
-import time as t
 from pathlib import Path
 from datetime import datetime as dt
 import pandas as pd
@@ -144,7 +143,8 @@ def current_records(mode='r'):
     file_prefix = folder_path + "/" + today.strftime("%m-%d-%Y") + "_WS"
 
     # Is it okay for me to put WS# in the file name?
-    # Or would Alex prefer that I create separate directories for WS1 and WS2?
+    # Or would Alex prefer that I
+    # create separate directories for WS1 and WS2?
     f1 = open(file_prefix + "1.csv", mode)
     f2 = open(file_prefix + "2.csv", mode)
 
@@ -152,16 +152,31 @@ def current_records(mode='r'):
 
 def save_to_disk():
     f1, f2 = current_records(mode='w+')
-    df1.to_csv(f1, na_rep='NaN', header=True, index=True, line_terminator="\n")
-    df2.to_csv(f2, na_rep='NaN', header=True, index=True, line_terminator="\n")
+    df1.to_csv(f1, na_rep='NaN', header=True,
+            index=True, line_terminator="\n")
+    df2.to_csv(f2, na_rep='NaN', header=True,
+            index=True, line_terminator="\n")
 
 df_columns = [var for var in var_roles.keys() \
         if var_roles[var] is not Role.ignore]
 
-df1 = pd.DataFrame(columns=df_columns)
-df2 = pd.DataFrame(columns=df_columns)
+df1 = None
+df2 = None
 
-last_autosave = t.time()
+def initialize_dfs():
+    """
+    Create empty data frames to hold the information
+    received from the weather stations.
+
+    We need this is to be a function and not
+    a naked pair of statements because
+    a running tool will sometimes have need
+    to start new tables
+    (see feed_interpreter::check_new_day)
+    """
+    global df1, df2
+    df1 = pd.DataFrame(columns=df_columns)
+    df2 = pd.DataFrame(columns=df_columns)
 
 shutting_down = False
 

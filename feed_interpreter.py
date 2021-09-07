@@ -2,16 +2,19 @@
     File name: feed_interpreter.py
     Author: Lukas Finkbeiner
     Date created: 8/30/2021
-    Date last modified: 9/6/2021
+    Date last modified: 9/7/2021
     Python version: 3.7.3
 """
 
 import re, os, sys
 import time as t
+from datetime import datetime as dt
 import numpy as np
 import shared as s
 # garbage import
 import traceback
+
+last_autosave = t.time()
 
 def listen():
     while not s.shutting_down:
@@ -24,7 +27,7 @@ def listen():
                 post_diffs()
 
             now = t.time()
-            if now - s.last_autosave >= s.AUTOSAVE_INTERVAL:
+            if now - last_autosave >= s.AUTOSAVE_INTERVAL:
                 s.last_autosave = now
                 s.save_to_disk()
  
@@ -34,7 +37,36 @@ def listen():
             print("TKInter probably died. Please try again.")
             sys.exit()
 
+def check_new_day():
+    """
+    Wipe WS data frames if we're starting a new day.
+
+    If the clock has struck midnight since the last
+    time that we wrote to the data frames,
+    we need to re-initialize the data frames.
+    The save function will automatically start
+    writing to a new file.
+
+    WARNING: this fn has not been tested
+        for correctness.
+    """
+    timestamps_WS1 = list(s.df1.index)
+    timestamps_WS2 = list(s.df2.index)
+
+    if timestamps_WS1:
+        last_ts = max(timestamps_WS1)
+        
+        if timestamps_WS2:
+            last_ts = max(last_ts, max(timestamps_WS2))
+    
+        before = dt.fromtimestamp(last_ts)
+        now = dt.today()
+        
+        if now.day != before.day:
+            initialize_dfs()
+
 def handle(feed, df):
+    check_new_day()
     feed["updated"] = False
     parse(feed, df)
     primary_styled = ""
@@ -46,7 +78,8 @@ def handle(feed, df):
         
         styled_line = s.var_abbrs[var]
         styled_line += ": "
-        # we do not need to worry about this being None, because "updated" was marked True
+        # we do not need to worry about this being None,
+        # because "updated" was marked True
         styled_line += str(df.loc[feed["latest_index"], var])
         styled_line += s.default_units[var]
         styled_line += "\n"

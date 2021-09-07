@@ -2,7 +2,7 @@
     File name: weather_report.py
     Author: Lukas Finkbeiner
     Date created: 8/30/2021
-    Date last modified: 9/6/2021
+    Date last modified: 9/7/2021
     Python version: 3.7.3
 """
 
@@ -31,6 +31,8 @@ def load_data():
     print("Pre-existing records checked.")
 
 def main():
+    s.initialize_dfs()
+
     # the thread numbering is entirely arbitrary
     t0 = threading.Thread(
         target=telnet_receiver.receive_from_ws1

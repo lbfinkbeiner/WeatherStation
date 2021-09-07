@@ -1,6 +1,4 @@
 Current to-do's, roughly in order of priority:
-	* We need to add a quit button. We need to figure out
-		how to even allow the user to quit gracefully.
 	? We need to add a logging system which checks whether
 		the program quit gracefully (does that even
 		matter? How would that affect the way
