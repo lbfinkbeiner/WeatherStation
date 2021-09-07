@@ -2,7 +2,7 @@
     File name: weather_report.py
     Author: Lukas Finkbeiner
     Date created: 8/30/2021
-    Date last modified: 9/5/2021
+    Date last modified: 9/6/2021
     Python version: 3.7.3
 """
 
@@ -23,26 +23,14 @@ def load_data():
     """
     f1, f2 = s.current_records(mode='r')
 
-    print("Prefixes retrieved")
-    t.sleep(5)
-
     # 'round_trip' forces pandas to take its time transcribing
     # the values. The price is time, but we only expect to load once.
     s.df1 = pd.read_csv(f1, index_col=0, float_precision='round_trip')
     s.df2 = pd.read_csv(f2, index_col=0, float_precision='round_trip')
 
-    print("Files read")
-    t.sleep(5)
-
-    # WARNING! THIS NEXT SECTION IS EXCLUSIVELY
-    # INTENENDED FOR TESTING
-    s.save_to_disk()
-    print("Files saved")
+    print("Pre-existing records checked.")
 
 def main():
-    load_data()
-    return
-
     # the thread numbering is entirely arbitrary
     t0 = threading.Thread(
         target=telnet_receiver.receive_from_ws1

@@ -2,7 +2,7 @@
     File name: weather_gui.py
     Author: Lukas Finkbeiner
     Date created: 8/31/2021
-    Date last modified: 9/5/2021
+    Date last modified: 9/6/2021
     Python version: 3.7.3
 
     Credit to soumibardhan10 and
