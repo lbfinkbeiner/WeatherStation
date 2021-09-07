@@ -16,11 +16,7 @@ import shared as s
 
 def load_data():
     """
-    TODO: Use an online diff checker to compare the before
-    and after when you dump a file, then load and dump it
-    again.
-
-    TODO: use a some kind of Python os or sys or whatever library
+    TODO: use some kind of Python os or sys or whatever library
         to look before you leap. Try catch statements
         seem like poor style if you have a better way of pre-checking
         the existence of today's files.
