@@ -5,6 +5,19 @@ Current to-do's, roughly in order of priority:
 		the program quit gracefully (does that even
 		matter? How would that affect the way
 		that we launch??)
+
+		Well, okay, I can at least think of one
+		separate reason for a log: it should save
+		tracebacks for each system crash,
+		and create a new log file (similar name scheme
+		to data records) and put it in a directory
+		called "crash_logs" or something.
+
+		If the program did not quit gracefully,
+		the user would still not need to be told that,
+		because the user would have to manually restart
+		the system. But this directory idea would be
+		helpful, I think.
 	* The auto-save feature should include a special
 		if statement to see if the day has ended,
 		in which case it wipes the data
@@ -13,6 +26,23 @@ Current to-do's, roughly in order of priority:
 		we need to start a new file for a new day
 		or try to resume an old one. Resuming
 		will require it's own fair deal of code.
+	* We need to add far more graphs,
+		and we need to add the option to switch
+		maximum # shown points,
+		and we need to add a scroll bar to be able
+		to even see that many graphs.
+	* If you're looking for graphs at around midnight,
+		our current wiping implementation may
+		make things complicated. Unfortunately, all
+		of the work-arounds that I can think of are
+		pretty limited.
+			Keep an old table for the immediate previous day?
+				Well what if someone wants to look at the
+					week?
+			Import old CSVs according to the range someone
+				selects?
+				That will take a lot of compute for
+					our poor little Pi!
 	* We need to redo the GUI grid layout.
 		1. The buttons look terrible. I think that they
 			should run along the bottom instead of
@@ -35,6 +65,11 @@ Current to-do's, roughly in order of priority:
 	* I find the white background to be an incredibly eye sore.
 		However, Alex may actually prefer the black and
 		the white because it is sharper in all light conditions.
+	* I consider the code to be fairly simple and intuitive.
+		Nonetheless, it is always good practice to thoroughly
+		document code. I think that I have good line comments
+		throughout my code, but I have almost no docstrings.
+		We should write some.
 
 In what format would Alex like the times to be displayed?
 	For now, I will assume I can do HH:mm:ss,

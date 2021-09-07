@@ -126,7 +126,13 @@ graph_data = {
     }
 }
 
-def save_to_disk():
+def current_records(mode='r'):
+    """
+    Returns the file handles for today's records,
+        which are internally based on the current month and day.
+    If the relevant directories do not exist, this
+        function automatically generates them.
+    """
     today = dt.today()
     current_year = str(today.year)
     current_month = today.strftime('%b')
@@ -136,12 +142,16 @@ def save_to_disk():
     # does Alex want this in American or proper format?
     # for now, I'll assume disgusting American format
     file_prefix = folder_path + "/" + today.strftime("%m-%d-%Y") + "_WS"
-    
+
     # Is it okay for me to put WS# in the file name?
     # Or would Alex prefer that I create separate directories for WS1 and WS2?
-    f1 = open(file_prefix + "1.csv", 'w')
-    f2 = open(file_prefix + "2.csv", 'w')
+    f1 = open(file_prefix + "1.csv", mode)
+    f2 = open(file_prefix + "2.csv", mode)
 
+    return f1, f2
+
+def save_to_disk():
+    f1, f2 = current_records(mode='w+')
     df1.to_csv(f1, na_rep='NaN', header=True, index=True, line_terminator="\n")
     df2.to_csv(f2, na_rep='NaN', header=True, index=True, line_terminator="\n")
 
