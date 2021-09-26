@@ -1,4 +1,7 @@
 Current to-do's, roughly in order of priority:
+	1. First, just try to get the GUI working again
+	* We need to switch the way we gather data,
+		but I still have no idea what Alex is saying
 	? We need to add a logging system which checks whether
 		the program quit gracefully (does that even
 		matter? How would that affect the way
@@ -16,10 +19,6 @@ Current to-do's, roughly in order of priority:
 		because the user would have to manually restart
 		the system. But this directory idea would be
 		helpful, I think.
-	* The auto-save feature should include a special
-		if statement to see if the day has ended,
-		in which case it wipes the data
-		tables and starts a new day.
 	* We need to add a launcher which will check whether
 		we need to start a new file for a new day
 		or try to resume an old one. Resuming
@@ -60,7 +59,7 @@ Current to-do's, roughly in order of priority:
 				menu bar? Diminishing returns;
 				we'll have to play around and see whether
 				it's worth it.
-	* I find the white background to be an incredibly eye sore.
+	* I find the white background to be an incredible eye sore.
 		However, Alex may actually prefer the black and
 		the white because it is sharper in all light conditions.
 	* I consider the code to be fairly simple and intuitive.
