@@ -14,6 +14,7 @@ import tkinter as tk
 from tkinter import ttk
 
 import logging
+import math
 import time as t
 
 # This next import is currently for testing
@@ -304,6 +305,15 @@ class Graphs(tk.Frame):
             update_visibilities()
         
         def update_visibilities():
+            if self.graphs_page == 0:
+                button_prev["state"] = "disabled"
+            else:
+                button_prev["state"] = "normal"
+            if self.graphs_page == self.NUM_PAGES - 1:
+                button_next["state"] = "disabled"
+            else:
+                button_next["state"] = "normal"
+
             for i in range(len(valid_graphs)):
                 var = valid_graphs[i]
                 if int(i / self.PAGE_SIZE) != self.graphs_page:
@@ -313,7 +323,7 @@ class Graphs(tk.Frame):
         
         tk.Frame.__init__(self, parent)
 
-        self.graphs_page = -1
+        self.graphs_page = 0
         # the maximum number of graphs we think
         # can reasonably fit on a single page
         self.PAGE_SIZE = 2
@@ -322,7 +332,8 @@ class Graphs(tk.Frame):
 
         valid_graphs = [key for key in s.var_abbrs.keys() \
                 if key != "Dm" and s.var_roles[key] is not s.Role.ignore]
-        
+        self.NUM_PAGES = int(math.ceil(len(valid_graphs) / self.PAGE_SIZE))
+
         title = ttk.Label(self, text = "Real-time Graphs", font = LARGEFONT)
         title.grid(row = 0, column = 2, padx = 10, pady = 10)
   
@@ -387,7 +398,7 @@ class Graphs(tk.Frame):
 
         s.graph_soul = update_graphs
 
-        next_page()
+        update_visibilities()
        
         #scrollbar = tk.Scrollbar(self, orient="vertical")
         #scrollbar.config(yscrollcommand=gh["Sx"]["canvas"].yview)

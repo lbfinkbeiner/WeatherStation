@@ -1,14 +1,10 @@
 Current to-do's, roughly in order of priority:
+	* In what format would Alex like the times to be displayed?
+		For now, I will assume I can do HH:mm:ss,
+		although that will make plots quite difficult to read,
+		because it is so long
 	* We need to switch the way we gather data,
 		but I still have no idea what Alex is saying
-	* We need to add far more graphs,
-		and we need to add the option to switch
-		maximum # shown points,
-		and we need to add a scroll bar to be able
-		to even see that many graphs.
-
-		are all these graphs going to put too much
-		stress on the RPi?
 	* If you're looking for graphs at around midnight,
 		our current wiping implementation may
 		make things complicated. Unfortunately, all
@@ -17,10 +13,6 @@ Current to-do's, roughly in order of priority:
 			Keep an old table for the immediate previous day?
 				Well what if someone wants to look at the
 					week?
-			Import old CSVs according to the range someone
-				selects?
-				That will take a lot of compute for
-					our poor little Pi!
 	* We need to redo the GUI grid layout.
 		1. The buttons look terrible. I think that they
 			should run along the bottom instead of
@@ -32,6 +24,7 @@ Current to-do's, roughly in order of priority:
 			unacceptable.
 		3. The title is way too large and the text
 			should probably be thicker.
+		4. The graphs page in particular is an absolute failure
 	* Can we figure out how to get the GUI to automatically
 		re-size to fill the screen? This will be necessary
 		since the Pi already has an incredibly tiny touch screen.
@@ -48,11 +41,6 @@ Current to-do's, roughly in order of priority:
 		document code. I think that I have good line comments
 		throughout my code, but I have almost no docstrings.
 		We should write some.
-
-In what format would Alex like the times to be displayed?
-	For now, I will assume I can do HH:mm:ss,
-	although that will make plots quite difficult to read,
-	because it is so long
 
 CSV interface idea:
 * We should have a hard-coded "vertical padding" dictionary
