@@ -300,16 +300,23 @@ class Graphs(tk.Frame):
                     graph["ax"].set_ylim(bottom, top)
                 
                 graph["canvas"].flush_events()
-        
+       
         def next_page():
             self.graphs_page += 1
+            update_visibilities()
+
+        def prev_page():
+            self.graphs_page -= 1
+            update_visibilities()
+        
+        def update_visibilities():
             for i in range(len(valid_graphs)):
                 var = valid_graphs[i]
                 if int(i / self.PAGE_SIZE) != self.graphs_page:
                     gh[var]["canvas"].get_tk_widget().grid_remove()
                 else:
                     gh[var]["canvas"].get_tk_widget().grid()
-                
+        
         tk.Frame.__init__(self, parent)
 
         self.graphs_page = -1
@@ -341,9 +348,13 @@ class Graphs(tk.Frame):
             command = lambda : controller.show_frame(Comms))
         button_comms.grid(row = 4, column = 1, padx = 10, pady = 10)
 
+        button_prev = ttk.Button(self, text = "Previous",
+            command = prev_page)
+        button_prev.grid(row = 0, column=2, padx=10, pady=10)
+        
         button_next = ttk.Button(self, text = "Next",
             command = next_page)
-        button_next.grid(row = 0, column=2, padx=10, pady=10)
+        button_next.grid(row = 0, column=4, padx=10, pady=10)
 
         # ! I think that a direction 1D plot would be difficult to read,
         # so I am not including it at the moment
