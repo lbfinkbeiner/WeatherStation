@@ -23,6 +23,7 @@ import numpy as np
 from matplotlib.backends.backend_tkagg import (
         FigureCanvasTkAgg, NavigationToolbar2Tk)
 from matplotlib.figure import Figure
+import matplotlib.pyplot as plt
 
 import shared as s
 
@@ -274,7 +275,7 @@ class Graphs(tk.Frame):
             line1.set_xdata(x)
             line1.set_ydata(y)
             #line1.set_ydata(new_data)
-            canvas.draw()
+            canvas_Ta.draw()
             """
             Autoscale is not working as expected,
             so this is a work-around.
@@ -301,11 +302,11 @@ class Graphs(tk.Frame):
                 if x.min() > 0:
                     left = x.min() + 1
                 right = x.max() + 1
-                ax.set_xlim(left, right)
+                ax_Ta.set_xlim(left, right)
                 bottom = y.min() - yap["Ta"]
                 top = y.max() + yap["Ta"]
-                ax.set_ylim(bottom, top)
-            canvas.flush_events()
+                ax_Ta.set_ylim(bottom, top)
+            canvas_Ta.flush_events()
             #ax.autoscale()
 
         tk.Frame.__init__(self, parent)
@@ -331,19 +332,25 @@ class Graphs(tk.Frame):
 
         # Here are some matplotlib tests
 
-        fig = Figure(figsize=(5, 2), dpi=100)
-        ax = fig.add_subplot(111)
+        # ! I think that a direction 1D plot would be difficult to read,
+        # so I am not including it at the moment
 
+        fig_Ta = Figure(figsize=(5, 2), dpi=100)
+        ax_Ta = fig_Ta.add_subplot(111)
+
+        # dummy starting plot to get useful handles
         t = np.arange(0, 3, 0.01)
-        line1, = ax.plot(t, 2 * np.sin(2 * np.pi * t))
+        line1, = ax_Ta.plot(t, 2 * np.sin(2 * np.pi * t))
 
-        canvas = FigureCanvasTkAgg(fig, self)
-        canvas.draw()
+        plt.title("Air Temperature over Time")
+        plt.xlabel("Time [index]")
+        plt.ylabel(r"Air Temperature $\circ$C")
 
-        canvas.get_tk_widget().grid(row=4, column=1, padx=10, pady=10)
+        canvas_Ta = FigureCanvasTkAgg(fig_Ta, self)
+        canvas_Ta.draw()
 
-        #canvas.get_tk_widget().pack(
-        #        side=tk.TOP, fill=tk.BOTH, expand=1)
+        canvas_Ta.get_tk_widget().grid(row=4, column=1, padx=10, pady=10)
+
         s.graph_soul = update
 
 def start():
