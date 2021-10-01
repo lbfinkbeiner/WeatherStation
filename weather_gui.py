@@ -306,10 +306,8 @@ class Graphs(tk.Frame):
             for i in range(len(valid_graphs)):
                 var = valid_graphs[i]
                 if int(i / self.PAGE_SIZE) != self.graphs_page:
-                    print("trying to hide")
                     gh[var]["canvas"].get_tk_widget().grid_remove()
                 else:
-                    print("trying to show")
                     gh[var]["canvas"].get_tk_widget().grid()
                 
         tk.Frame.__init__(self, parent)
@@ -318,6 +316,8 @@ class Graphs(tk.Frame):
         # the maximum number of graphs we think
         # can reasonably fit on a single page
         self.PAGE_SIZE = 2
+        self.PLOT_SEPARATION = 2
+        self.INIT_PLOT_ROW = 1
 
         valid_graphs = [key for key in s.var_abbrs.keys() \
                 if key != "Dm" and s.var_roles[key] is not s.Role.ignore]
@@ -341,7 +341,9 @@ class Graphs(tk.Frame):
             command = lambda : controller.show_frame(Comms))
         button_comms.grid(row = 4, column = 1, padx = 10, pady = 10)
 
-        # Here are some matplotlib tests
+        button_next = ttk.Button(self, text = "Next",
+            command = next_page)
+        button_next.grid(row = 0, column=2, padx=10, pady=10)
 
         # ! I think that a direction 1D plot would be difficult to read,
         # so I am not including it at the moment
@@ -349,10 +351,9 @@ class Graphs(tk.Frame):
         # "graph handles." It's a pretty extreme abbreviation,
         # but it's a sufficiently common label to warrant it.
         gh = {}
-        # starting row for graph widgets
-        row = 0
 
-        for var in valid_graphs:
+        for i in range(len(valid_graphs)):
+            var = valid_graphs[i]
             gh[var] = {}
             
             gh[var]["fig"] = Figure(figsize=(5, 3), dpi=100)
@@ -372,8 +373,12 @@ class Graphs(tk.Frame):
             gh[var]["canvas"] = FigureCanvasTkAgg(gh[var]["fig"], self)
             gh[var]["canvas"].draw()
 
+            row = self.INIT_PLOT_ROW
+            if i % 2 == 1:
+                row += self.PLOT_SEPARATION
+
             gh[var]["canvas"].get_tk_widget().grid(row=row, column=2, padx=10, pady=10)
-            row += 2
+
 
         s.graph_soul = update_graphs
 
