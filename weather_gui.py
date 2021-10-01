@@ -295,6 +295,10 @@ class Graphs(tk.Frame):
                     graph["ax"].set_xlim(left, right)
                     bottom = y.min() - yap[var]
                     top = y.max() + yap[var]
+                    if bottom is np.nan or top is np.nan:
+                    # stupid hack to get the machine to survive
+                        bottom = -1
+                        top = 1
                     #print(y.min(), y.max()) !!! We are still having trouble with NaN's
                     #print(bottom, top)
                     graph["ax"].set_ylim(bottom, top)
@@ -302,7 +306,7 @@ class Graphs(tk.Frame):
                 graph["canvas"].flush_events()
 
         tk.Frame.__init__(self, parent)
-        
+
         title = ttk.Label(self, text = "Real-time Graphs", font = LARGEFONT)
         title.grid(row = 0, column = 2, padx = 10, pady = 10)
   
@@ -362,6 +366,10 @@ class Graphs(tk.Frame):
 
         s.graph_soul = update_graphs
 
+       
+        scrollbar = tk.Scrollbar(self, orient="vertical")
+        scrollbar.config(yscrollcommand=gh["Sx"]["canvas"].yview)
+        scrollbar.grid(row=0, column=4, sticky="NSE")
 def start():
     app = Weather_Interface()
     global destroy
