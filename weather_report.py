@@ -73,5 +73,7 @@ def main():
 
         spawn_workers()
     except Exception as e:
-       logging.error(str(int(t.time())) + traceback.format_exc()) 
+       logging.error(str(int(t.time())) + traceback.format_exc())
+
+main()
 

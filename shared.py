@@ -132,11 +132,14 @@ graph_data = {
     }
 }
 
-def today_prefix():
+def today_prefix(category="records"):
     today = dt.today()
     current_year = str(today.year)
     current_month = today.strftime('%b')
-    folder_path = "./records/" + current_year + "/" + current_month
+    
+    folder_path = "./" + category + "/"
+    folder_path += current_year + "/" + current_month
+    
     Path(folder_path).mkdir(parents=True, exist_ok=True)
 
     # does Alex want this in American or proper format?
@@ -192,10 +195,11 @@ def initialize_dfs():
 def initialize_logger():
     global log_handler
     
-    log_handler = logging.handlers.WatchedFileHandler(today_prefix() + ".log")
-    log_handler.setFormatter(formatter)
-    s.root_log.handlers.clear()
-    s.addHandler(log_handler)
+    fName = today_prefix(category="logs") + ".log"
+    log_handler = logging.handlers.WatchedFileHandler(fName)
+    log_handler.setFormatter(log_formatter)
+    root_log.handlers.clear()
+    root_log.addHandler(log_handler)
 
 shutting_down = False
 
