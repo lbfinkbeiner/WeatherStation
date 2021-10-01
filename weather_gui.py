@@ -272,13 +272,14 @@ class Graphs(tk.Frame):
         def update_graphs(num_points=10):
             df_graph = s.df1.tail(num_points)
 
-            for blah in bloop:
-                x = np.array(list(df_graph["Ta"]))
-                y = np.array(list(df_graph["Ta"]))
-                line1.set_xdata(x)
-                line1.set_ydata(y)
+            for var in var_abbrs.keys():
+                graph = gh[var]
+                x = np.array(list(df_graph.index)) # this sucks and needs reformatting
+                y = np.array(list(df_graph[var]))
+                graph["line"].set_xdata(x)
+                graph["line"].set_ydata(y)
                 #line1.set_ydata(new_data)
-                canvas_Ta.draw()
+                graph["canvas"].draw()
             """
             Autoscale is not working as expected,
             so this is a work-around.
@@ -288,29 +289,16 @@ class Graphs(tk.Frame):
             because real-time plotting will already be an
             incredible burden on our poor Pi.
             """
-            # ax.set_xlim <- come back to this when we start
-                # adding points one at a time
-            """
-            don't forget that, for easy mode programming,
-            the x-axis will simply indicate index.
-            For the release version, we will need to indicate
-            time as the x coordinate (that requires us to
-            include a universal timer in this program)
-            """    
             if x.size > 1:
-                # This next part is REALLY weird, and I don't
-                # understand at all why I had to add unity.
-                # Does Wael know?
-                left = 0
-                if x.min() > 0:
-                    left = x.min() + 1
+                left = x.min() - 1
                 right = x.max() + 1
-                ax_Ta.set_xlim(left, right)
-                bottom = y.min() - yap["Ta"]
-                top = y.max() + yap["Ta"]
+                graph["ax"].set_xlim(left, right)
+                bottom = y.min() - yap[var]
+                top = y.max() + yap[var]
                 #print(bottom, top)
-                ax_Ta.set_ylim(bottom, top)
-            canvas_Ta.flush_events()
+                graph["ax"].set_ylim(bottom, top)
+            
+            graph["canvas"].flush_events()
 
         tk.Frame.__init__(self, parent)
         
@@ -344,7 +332,7 @@ class Graphs(tk.Frame):
         # starting row
         row = 4
 
-        for var in var_abbrs:
+        for var in var_abbrs.keys():
             gh[var] = {}
             
             gh[var]["fig"] = Figure(figsize=(5, 3), dpi=100)
