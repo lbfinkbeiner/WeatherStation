@@ -273,6 +273,11 @@ class Graphs(tk.Frame):
             df_graph = s.df1.tail(num_points)
 
             for var in s.var_abbrs.keys():
+                if s.var_roles[var] is s.Role.ignore:
+                    continue
+                if var == "Dm":
+                    continue # I don't think that this would be an insightful graph
+
                 graph = gh[var]
                 x = np.array(list(df_graph.index)) # this sucks and needs reformatting
                 y = np.array(list(df_graph[var]))
@@ -333,6 +338,10 @@ class Graphs(tk.Frame):
         row = 4
 
         for var in s.var_abbrs.keys():
+            if s.var_roles[var] is s.Role.ignore:
+                continue
+            if var == "Dm":
+                continue # I don't think that this would be an insightful graph
             gh[var] = {}
             
             gh[var]["fig"] = Figure(figsize=(5, 3), dpi=100)

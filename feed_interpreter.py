@@ -17,6 +17,7 @@ import traceback
 last_autosave = t.time()
 
 def listen():
+    t.sleep(5) #! Incredibly hacky; it gives the GUI more time to load
     while not s.shutting_down:
         try:
             if s.feed1["updated"]:
