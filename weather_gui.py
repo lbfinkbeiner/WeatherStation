@@ -13,6 +13,9 @@
 import tkinter as tk
 from tkinter import ttk
 
+import logging
+import time as t
+
 # This next import is currently for testing
 # purposes and should be axed, maybe
 import numpy as np
@@ -109,6 +112,8 @@ class WS1(tk.Frame):
             WS1_details.config(text = new_text)
        
         def close_tool():
+            logging.info(str(int(t.time())) + ": graceful shutdown initiated.")
+
             s.shutting_down = True
             s.save_to_disk()
             global destroy
