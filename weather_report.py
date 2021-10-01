@@ -21,7 +21,11 @@ def load_data():
         seem like poor style if you have a better way of pre-checking
         the existence of today's files.
     """
-    f1, f2 = s.current_records(mode='r')
+    try:
+        f1, f2 = s.current_records(mode='r')
+    except FileNotFoundError:
+        print("No pre-existing records found using today's date. Starting a new file.")
+        return
 
     # 'round_trip' forces pandas to take its time transcribing
     # the values. The price is time, but we only expect to load once.
@@ -32,6 +36,7 @@ def load_data():
 
 def main():
     s.initialize_dfs()
+    load_data()
 
     # the thread numbering is entirely arbitrary
     t0 = threading.Thread(

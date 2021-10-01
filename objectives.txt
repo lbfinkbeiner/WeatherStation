@@ -19,10 +19,6 @@ Current to-do's, roughly in order of priority:
 		because the user would have to manually restart
 		the system. But this directory idea would be
 		helpful, I think.
-	* We need to add a launcher which will check whether
-		we need to start a new file for a new day
-		or try to resume an old one. Resuming
-		will require it's own fair deal of code.
 	* We need to add far more graphs,
 		and we need to add the option to switch
 		maximum # shown points,

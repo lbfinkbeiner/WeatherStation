@@ -175,6 +175,7 @@ def initialize_dfs():
     (see feed_interpreter::check_new_day)
     """
     global df1, df2
+   
     df1 = pd.DataFrame(columns=df_columns)
     df2 = pd.DataFrame(columns=df_columns)
 
