@@ -272,7 +272,7 @@ class Graphs(tk.Frame):
         def update_graphs(num_points=10):
             df_graph = s.df1.tail(num_points)
 
-            for var in var_abbrs.keys():
+            for var in s.var_abbrs.keys():
                 graph = gh[var]
                 x = np.array(list(df_graph.index)) # this sucks and needs reformatting
                 y = np.array(list(df_graph[var]))
@@ -332,21 +332,22 @@ class Graphs(tk.Frame):
         # starting row
         row = 4
 
-        for var in var_abbrs.keys():
+        for var in s.var_abbrs.keys():
             gh[var] = {}
             
             gh[var]["fig"] = Figure(figsize=(5, 3), dpi=100)
             gh[var]["ax"] = gh[var]["fig"].add_subplot(111)
             
-            gh[var]["fig"].suptitle()
+            title = s.var_abbrs[var] + " over Time"
+            gh[var]["fig"].suptitle(title)
             gh[var]["ax"].set_xlabel("Time [index]")
-            y_label = var_abbrs[var] + " [" + default_units[var] + "]"
+            y_label = s.var_abbrs[var] + " [" + s.default_units[var] + "]"
             gh[var]["ax"].set_ylabel(y_label)
             gh[var]["fig"].tight_layout()
 
             # dummy starting plot to get useful handles
             t_dummy = np.arange(0, 3, 0.01)
-            gh[var]["line"], = gh[var]["ax"].plot(t, 2 * np.sin(2 * np.pi * t))
+            gh[var]["line"], = gh[var]["ax"].plot(t_dummy, 2 * np.sin(2 * np.pi * t_dummy))
 
             gh[var]["canvas"] = FigureCanvasTkAgg(gh[var]["fig"], self)
             gh[var]["canvas"].draw()
@@ -354,7 +355,7 @@ class Graphs(tk.Frame):
             gh[var]["canvas"].get_tk_widget().grid(row=row, column=1, padx=10, pady=10)
             row += 2
 
-        s.graph_soul = update
+        s.graph_soul = update_graphs
 
 def start():
     app = Weather_Interface()
