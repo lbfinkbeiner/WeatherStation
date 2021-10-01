@@ -63,7 +63,8 @@ def check_new_day():
         now = dt.today()
         
         if now.day != before.day:
-            initialize_dfs()
+            s.initialize_dfs()
+            s.initialize_logger()
 
 def handle(feed, df):
     check_new_day()

@@ -14,6 +14,11 @@ import numpy as np, pandas as pd
 import feed_interpreter, telnet_receiver, weather_gui
 import shared as s
 
+import traceback
+import logging
+import logging.handlers
+import os
+
 def load_data():
     """
     TODO: use some kind of Python os or sys or whatever library
@@ -34,7 +39,8 @@ def load_data():
 
     print("Pre-existing records checked.")
 
-def main():
+def spawn_workers():
+    logging.info(str(int(t.time())) + ": spawn_workers routine initiated.")
     s.initialize_dfs()
     load_data()
 
@@ -58,5 +64,14 @@ def main():
     # so the GUI gets to sit in the main routine.
     weather_gui.start()
 
-main()
+def main():
+    try:
+        s.root_log = logging.getLogger()
+        s.root_log.setLevel(os.environ.get("LOGLEVEL", "INFO"))
+        s.log_formatter = logging.Formatter(logging.BASIC_FORMAT)
+        s.initialize_logger()
+
+        spawn_workers()
+    except Exception as e:
+       logging.error(str(int(t.time())) + traceback.format_exc()) 
 

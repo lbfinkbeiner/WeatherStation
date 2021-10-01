@@ -11,6 +11,13 @@ from pathlib import Path
 from datetime import datetime as dt
 import pandas as pd
 
+import logging
+import logging.handlers
+
+log_handler = None
+root_log = None
+log_formatter = None
+
 # The next two lines help with readibility for the third
 HOUR = 3600
 MINUTE = 60
@@ -125,6 +132,17 @@ graph_data = {
     }
 }
 
+def today_prefix():
+    today = dt.today()
+    current_year = str(today.year)
+    current_month = today.strftime('%b')
+    folder_path = "./records/" + current_year + "/" + current_month
+    Path(folder_path).mkdir(parents=True, exist_ok=True)
+
+    # does Alex want this in American or proper format?
+    # for now, I'll assume disgusting American format
+    return folder_path + "/" + today.strftime("%m-%d-%Y")
+
 def current_records(mode='r'):
     """
     Returns the file handles for today's records,
@@ -132,15 +150,7 @@ def current_records(mode='r'):
     If the relevant directories do not exist, this
         function automatically generates them.
     """
-    today = dt.today()
-    current_year = str(today.year)
-    current_month = today.strftime('%b')
-    folder_path = "./records/" + current_year + "/" + current_month
-    Path(folder_path).mkdir(parents=True, exist_ok=True)
-   
-    # does Alex want this in American or proper format?
-    # for now, I'll assume disgusting American format
-    file_prefix = folder_path + "/" + today.strftime("%m-%d-%Y") + "_WS"
+    file_prefix = today_prefix() + "_WS"
 
     # Is it okay for me to put WS# in the file name?
     # Or would Alex prefer that I
@@ -178,6 +188,14 @@ def initialize_dfs():
    
     df1 = pd.DataFrame(columns=df_columns)
     df2 = pd.DataFrame(columns=df_columns)
+
+def initialize_logger():
+    global log_handler
+    
+    log_handler = logging.handlers.WatchedFileHandler(today_prefix() + ".log")
+    log_handler.setFormatter(formatter)
+    s.root_log.handlers.clear()
+    s.addHandler(log_handler)
 
 shutting_down = False
 
