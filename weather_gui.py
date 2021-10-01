@@ -271,7 +271,7 @@ class Graphs(tk.Frame):
 
     def __init__(self, parent, controller):
         def update_graphs(num_points=10):
-            df_graph = s.df1.tail(num_points)
+            df_graph = s.df1.tail(num_points).dropna()
             x = np.array(list(df_graph.index)) # this sucks and needs reformatting
 
             if x.size > 1:
@@ -291,12 +291,6 @@ class Graphs(tk.Frame):
                     graph["ax"].set_xlim(left, right)
                     bottom = y.min() - yap[var]
                     top = y.max() + yap[var]
-                    if bottom is np.nan or top is np.nan:
-                    # stupid hack to get the machine to survive
-                        bottom = -1
-                        top = 1
-                    #print(y.min(), y.max()) !!! We are still having trouble with NaN's
-                    #print(bottom, top)
                     graph["ax"].set_ylim(bottom, top)
                 
                 graph["canvas"].flush_events()
