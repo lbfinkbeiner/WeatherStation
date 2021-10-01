@@ -271,7 +271,12 @@ class Graphs(tk.Frame):
     def __init__(self, parent, controller):
         def update_graphs(num_points=10):
             df_graph = s.df1.tail(num_points)
+            x = np.array(list(df_graph.index)) # this sucks and needs reformatting
 
+            if x.size > 1:
+                left = x.min() - 1
+                right = x.max() + 1
+            
             for var in s.var_abbrs.keys():
                 if s.var_roles[var] is s.Role.ignore:
                     continue
@@ -279,31 +284,22 @@ class Graphs(tk.Frame):
                     continue # I don't think that this would be an insightful graph
 
                 graph = gh[var]
-                x = np.array(list(df_graph.index)) # this sucks and needs reformatting
                 y = np.array(list(df_graph[var]))
                 graph["line"].set_xdata(x)
                 graph["line"].set_ydata(y)
-                #line1.set_ydata(new_data)
                 graph["canvas"].draw()
-            """
-            Autoscale is not working as expected,
-            so this is a work-around.
-
-            We need to be careful about these next two lines,
-            and to update them only when absolutely necessary,
-            because real-time plotting will already be an
-            incredible burden on our poor Pi.
-            """
-            if x.size > 1:
-                left = x.min() - 1
-                right = x.max() + 1
-                graph["ax"].set_xlim(left, right)
-                bottom = y.min() - yap[var]
-                top = y.max() + yap[var]
-                #print(bottom, top)
-                graph["ax"].set_ylim(bottom, top)
-            
-            graph["canvas"].flush_events()
+                
+                # Autoscale is not working as expected,
+                # so this is a work-around.
+                if x.size > 1:
+                    graph["ax"].set_xlim(left, right)
+                    bottom = y.min() - yap[var]
+                    top = y.max() + yap[var]
+                    #print(y.min(), y.max()) !!! We are still having trouble with NaN's
+                    #print(bottom, top)
+                    graph["ax"].set_ylim(bottom, top)
+                
+                graph["canvas"].flush_events()
 
         tk.Frame.__init__(self, parent)
         

@@ -22,6 +22,7 @@ def listen():
         try:
             if s.feed1["updated"]:
                 handle(s.feed1, s.df1)
+                s.graph_soul()
                 post_diffs()
             if s.feed2["updated"]:
                 handle(s.feed2, s.df2)
@@ -186,8 +187,6 @@ def post_diffs():
                     gd["x"] = np.append(gd["x"], x_element)
                     gd["y"] = np.append(gd["y"], y_element)
                  
-                s.graph_soul()
-
             styled += s.var_abbrs[var]
             styled += ": "
             styled += str(np.around(val2 - val1, 4))
