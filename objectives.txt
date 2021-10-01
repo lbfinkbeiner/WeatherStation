@@ -1,29 +1,14 @@
 Current to-do's, roughly in order of priority:
-	1. First, just try to get the GUI working again
 	* We need to switch the way we gather data,
 		but I still have no idea what Alex is saying
-	? We need to add a logging system which checks whether
-		the program quit gracefully (does that even
-		matter? How would that affect the way
-		that we launch??)
-
-		Well, okay, I can at least think of one
-		separate reason for a log: it should save
-		tracebacks for each system crash,
-		and create a new log file (similar name scheme
-		to data records) and put it in a directory
-		called "crash_logs" or something.
-
-		If the program did not quit gracefully,
-		the user would still not need to be told that,
-		because the user would have to manually restart
-		the system. But this directory idea would be
-		helpful, I think.
 	* We need to add far more graphs,
 		and we need to add the option to switch
 		maximum # shown points,
 		and we need to add a scroll bar to be able
 		to even see that many graphs.
+
+		are all these graphs going to put too much
+		stress on the RPi?
 	* If you're looking for graphs at around midnight,
 		our current wiping implementation may
 		make things complicated. Unfortunately, all
