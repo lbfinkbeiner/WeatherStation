@@ -268,6 +268,7 @@ class Comms(tk.Frame):
         s.feed2["comm_soul"] = update_WS2
         
 class Graphs(tk.Frame):
+
     def __init__(self, parent, controller):
         def update_graphs(num_points=10):
             df_graph = s.df1.tail(num_points)
@@ -277,12 +278,7 @@ class Graphs(tk.Frame):
                 left = x.min() - 1
                 right = x.max() + 1
             
-            for var in s.var_abbrs.keys():
-                if s.var_roles[var] is s.Role.ignore:
-                    continue
-                if var == "Dm":
-                    continue # I don't think that this would be an insightful graph
-
+            for var in valid_graphs:
                 graph = gh[var]
                 y = np.array(list(df_graph[var]))
                 graph["line"].set_xdata(x)
@@ -304,9 +300,28 @@ class Graphs(tk.Frame):
                     graph["ax"].set_ylim(bottom, top)
                 
                 graph["canvas"].flush_events()
-
+        
+        def next_page():
+            self.graphs_page += 1
+            for i in range(len(valid_graphs)):
+                var = valid_graphs[i]
+                if int(i / self.PAGE_SIZE) != self.graphs_page:
+                    print("trying to hide")
+                    gh[var]["canvas"].get_tk_widget().grid_remove()
+                else:
+                    print("trying to show")
+                    gh[var]["canvas"].get_tk_widget().grid()
+                
         tk.Frame.__init__(self, parent)
 
+        self.graphs_page = -1
+        # the maximum number of graphs we think
+        # can reasonably fit on a single page
+        self.PAGE_SIZE = 2
+
+        valid_graphs = [key for key in s.var_abbrs.keys() \
+                if key != "Dm" and s.var_roles[key] is not s.Role.ignore]
+        
         title = ttk.Label(self, text = "Real-time Graphs", font = LARGEFONT)
         title.grid(row = 0, column = 2, padx = 10, pady = 10)
   
@@ -334,14 +349,10 @@ class Graphs(tk.Frame):
         # "graph handles." It's a pretty extreme abbreviation,
         # but it's a sufficiently common label to warrant it.
         gh = {}
-        # starting row
-        row = 4
+        # starting row for graph widgets
+        row = 0
 
-        for var in s.var_abbrs.keys():
-            if s.var_roles[var] is s.Role.ignore:
-                continue
-            if var == "Dm":
-                continue # I don't think that this would be an insightful graph
+        for var in valid_graphs:
             gh[var] = {}
             
             gh[var]["fig"] = Figure(figsize=(5, 3), dpi=100)
@@ -361,15 +372,16 @@ class Graphs(tk.Frame):
             gh[var]["canvas"] = FigureCanvasTkAgg(gh[var]["fig"], self)
             gh[var]["canvas"].draw()
 
-            gh[var]["canvas"].get_tk_widget().grid(row=row, column=1, padx=10, pady=10)
+            gh[var]["canvas"].get_tk_widget().grid(row=row, column=2, padx=10, pady=10)
             row += 2
 
         s.graph_soul = update_graphs
 
+        next_page()
        
-        scrollbar = tk.Scrollbar(self, orient="vertical")
-        scrollbar.config(yscrollcommand=gh["Sx"]["canvas"].yview)
-        scrollbar.grid(row=0, column=4, sticky="NSE")
+        #scrollbar = tk.Scrollbar(self, orient="vertical")
+        #scrollbar.config(yscrollcommand=gh["Sx"]["canvas"].yview)
+        #scrollbar.grid(row=0, column=4, sticky="NSE")
 def start():
     app = Weather_Interface()
     global destroy
