@@ -269,13 +269,16 @@ class Comms(tk.Frame):
         
 class Graphs(tk.Frame):
     def __init__(self, parent, controller):
-        def update():
-            x = s.graph_data["Ta"]["x"]
-            y = s.graph_data["Ta"]["y"]
-            line1.set_xdata(x)
-            line1.set_ydata(y)
-            #line1.set_ydata(new_data)
-            canvas_Ta.draw()
+        def update_graphs(num_points=10):
+            df_graph = s.df1.tail(num_points)
+
+            for blah in bloop:
+                x = np.array(list(df_graph["Ta"]))
+                y = np.array(list(df_graph["Ta"]))
+                line1.set_xdata(x)
+                line1.set_ydata(y)
+                #line1.set_ydata(new_data)
+                canvas_Ta.draw()
             """
             Autoscale is not working as expected,
             so this is a work-around.
@@ -305,9 +308,9 @@ class Graphs(tk.Frame):
                 ax_Ta.set_xlim(left, right)
                 bottom = y.min() - yap["Ta"]
                 top = y.max() + yap["Ta"]
+                #print(bottom, top)
                 ax_Ta.set_ylim(bottom, top)
             canvas_Ta.flush_events()
-            #ax.autoscale()
 
         tk.Frame.__init__(self, parent)
         
@@ -335,21 +338,33 @@ class Graphs(tk.Frame):
         # ! I think that a direction 1D plot would be difficult to read,
         # so I am not including it at the moment
 
-        fig_Ta = Figure(figsize=(5, 2), dpi=100)
-        ax_Ta = fig_Ta.add_subplot(111)
+        # "graph handles." It's a pretty extreme abbreviation,
+        # but it's a sufficiently common label to warrant it.
+        gh = {}
+        # starting row
+        row = 4
 
-        # dummy starting plot to get useful handles
-        t = np.arange(0, 3, 0.01)
-        line1, = ax_Ta.plot(t, 2 * np.sin(2 * np.pi * t))
+        for var in var_abbrs:
+            gh[var] = {}
+            
+            gh[var]["fig"] = Figure(figsize=(5, 3), dpi=100)
+            gh[var]["ax"] = gh[var]["fig"].add_subplot(111)
+            
+            gh[var]["fig"].suptitle()
+            gh[var]["ax"].set_xlabel("Time [index]")
+            y_label = var_abbrs[var] + " [" + default_units[var] + "]"
+            gh[var]["ax"].set_ylabel(y_label)
+            gh[var]["fig"].tight_layout()
 
-        plt.title("Air Temperature over Time")
-        plt.xlabel("Time [index]")
-        plt.ylabel(r"Air Temperature $\circ$C")
+            # dummy starting plot to get useful handles
+            t_dummy = np.arange(0, 3, 0.01)
+            gh[var]["line"], = gh[var]["ax"].plot(t, 2 * np.sin(2 * np.pi * t))
 
-        canvas_Ta = FigureCanvasTkAgg(fig_Ta, self)
-        canvas_Ta.draw()
+            gh[var]["canvas"] = FigureCanvasTkAgg(gh[var]["fig"], self)
+            gh[var]["canvas"].draw()
 
-        canvas_Ta.get_tk_widget().grid(row=4, column=1, padx=10, pady=10)
+            gh[var]["canvas"].get_tk_widget().grid(row=row, column=1, padx=10, pady=10)
+            row += 2
 
         s.graph_soul = update
 
